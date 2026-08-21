@@ -1,0 +1,1887 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Nizhal Crackers | Crackers Products</title>
+  <meta name="description" content="Nizhal Crackers product catalogue with prices and online order through WhatsApp.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#a50000">
+
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- PDF libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:#fff8ef;
+      color:#20130d;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:#fff;
+      border-bottom:1px solid #eadbca;
+    }
+
+    .nav{
+      max-width:1200px;
+      margin:auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .logo{
+      font-size:24px;
+      font-weight:900;
+      color:#a50000;
+    }
+
+    .tagline{
+      font-size:12px;
+      color:#666;
+      margin-top:3px;
+    }
+
+    .cart{
+      border:0;
+      background:#128c7e;
+      color:#fff;
+      padding:11px 17px;
+      border-radius:25px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .hero{
+      color:#fff;
+      background:linear-gradient(135deg,#620000,#b00000,#e85d04,#ff8c00);
+    }
+
+    .hero-inner{
+      max-width:1200px;
+      margin:auto;
+      padding:30px 16px;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:clamp(34px,6vw,58px);
+      font-weight:900;
+    }
+
+    .hero p{
+      margin:8px 0 0;
+      font-size:16px;
+    }
+
+    main{
+      max-width:1200px;
+      margin:auto;
+      padding:18px 16px 35px;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .search{
+      flex:1;
+      min-width:220px;
+      padding:14px;
+      border:1px solid #e5d2bd;
+      border-radius:10px;
+      font-size:16px;
+      outline:none;
+      background:#fff;
+    }
+
+    .unit-select{
+      padding:14px;
+      border:1px solid #e5d2bd;
+      border-radius:10px;
+      background:#fff;
+    }
+
+    .status{
+      color:#765f50;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(205px,1fr));
+      gap:14px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #eadbca;
+      border-radius:15px;
+      padding:10px;
+      box-shadow:0 3px 10px rgba(100,30,0,.07);
+      overflow:hidden;
+    }
+
+    .image-wrap{
+      width:100%;
+      height:185px;
+      border-radius:11px;
+      background:#faf6f1;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:10px;
+    }
+
+    .product-image{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .discount-badge{
+      display:inline-block;
+      background:#d00000;
+      color:#fff;
+      padding:5px 9px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .product-name{
+      font-size:16px;
+      font-weight:900;
+      margin:9px 0 7px;
+      min-height:40px;
+      line-height:1.25;
+    }
+
+    .product-unit{
+      font-size:12px;
+      color:#76665c;
+      min-height:16px;
+    }
+
+    .mrp{
+      color:#888;
+      text-decoration:line-through;
+      font-size:13px;
+      margin-top:5px;
+    }
+
+    .price{
+      font-size:21px;
+      font-weight:900;
+      margin:5px 0 10px;
+    }
+
+    .add-button{
+      width:100%;
+      padding:12px;
+      border:0;
+      border-radius:9px;
+      background:#a80000;
+      color:#fff;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .add-button:hover{background:#790000}
+
+    .drawer{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:500;
+    }
+
+    .drawer.open{display:block}
+
+    .shade{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.55);
+    }
+
+    .panel{
+      position:absolute;
+      top:0;
+      right:0;
+      width:min(480px,100%);
+      height:100%;
+      background:#fff;
+      overflow-y:auto;
+      padding:18px;
+    }
+
+    .panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid #eadbca;
+      padding-bottom:10px;
+    }
+
+    .panel-head h2{margin:0}
+
+    .close-button{
+      border:1px solid #ccc;
+      background:#fff;
+      padding:8px 12px;
+      cursor:pointer;
+      border-radius:6px;
+    }
+
+    .cart-item{
+      padding:13px 0;
+      border-bottom:1px solid #eadbca;
+    }
+
+    .cart-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .cart-thumb{
+      width:58px;
+      height:58px;
+      object-fit:contain;
+      border-radius:8px;
+      background:#faf6f1;
+      flex:none;
+    }
+
+    .cart-name{font-weight:900;font-size:15px}
+    .cart-info{color:#76665c;font-size:12px;margin-top:4px}
+
+    .qty-controls{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-top:8px;
+    }
+
+    .qty-controls button{
+      width:32px;
+      height:32px;
+      border:1px solid #bbb;
+      background:#fff;
+      border-radius:5px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .total-box{
+      display:flex;
+      justify-content:space-between;
+      font-size:23px;
+      font-weight:900;
+      padding:18px 0;
+    }
+
+    .field{
+      width:100%;
+      padding:13px;
+      border:1px solid #ddd;
+      border-radius:9px;
+      margin-bottom:9px;
+      font-size:15px;
+      outline:none;
+    }
+
+    textarea.field{resize:vertical}
+
+    .submit-button,.download-button{
+      width:100%;
+      padding:13px;
+      border:0;
+      border-radius:9px;
+      font-weight:900;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    .submit-button{
+      background:#25d366;
+      color:#073b1a;
+    }
+
+    .download-button{
+      background:#222;
+      color:#fff;
+      margin-top:8px;
+    }
+
+    .submit-button:disabled{
+      opacity:.65;
+      cursor:wait;
+    }
+
+    .note{
+      color:#777;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    footer{
+      background:#250000;
+      color:#fff;
+      padding:28px 16px;
+      text-align:center;
+    }
+
+    footer p{
+      line-height:1.6;
+      font-size:13px;
+    }
+
+    @media(max-width:600px){
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+      .card{padding:8px;border-radius:12px}
+      .image-wrap{height:145px}
+      .product-name{font-size:14px}
+      .price{font-size:18px}
+      .add-button{padding:11px 5px;font-size:12px}
+      .logo{font-size:20px}
+      .hero-inner{padding:25px 15px}
+      .hero h1{font-size:38px}
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+    <div>
+      <div class="logo">NIZHAL CRACKERS</div>
+      <div class="tagline">Crackers Products</div>
+    </div>
+
+    <button class="cart" onclick="openCart()" aria-label="Open cart">
+      Cart <span id="count">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Nizhal Crackers</h1>
+    <p>Browse our crackers, check the price and order through WhatsApp.</p>
+  </div>
+</section>
+
+<main>
+  <div class="toolbar">
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="Search products..."
+      oninput="renderProducts()"
+      aria-label="Search products"
+    >
+
+    <select
+      id="unitSelect"
+      class="unit-select"
+      onchange="renderProducts()"
+      aria-label="Filter by unit"
+    >
+      <option value="">All Units</option>
+    </select>
+  </div>
+
+  <div id="status" class="status">Loading products...</div>
+  <div id="grid" class="grid"></div>
+</main>
+
+<!-- CART -->
+<div id="drawer" class="drawer">
+  <div class="shade" onclick="closeCart()"></div>
+
+  <aside class="panel" aria-label="Shopping cart">
+    <div class="panel-head">
+      <h2>Order</h2>
+      <button class="close-button" onclick="closeCart()">X</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <p id="emptyCart" class="note">Your cart is empty.</p>
+
+    <div id="orderForm" style="display:none">
+      <div class="total-box">
+        <span>Total</span>
+        <span id="cartTotal">Rs.0.00</span>
+      </div>
+
+      <input id="customerName" class="field" type="text" placeholder="Customer Name *" autocomplete="name">
+      <input id="customerPhone" class="field" type="tel" placeholder="Mobile Number *" autocomplete="tel">
+      <textarea id="customerAddress" class="field" rows="4" placeholder="Delivery Address" autocomplete="street-address"></textarea>
+
+      <button id="submitButton" class="submit-button" onclick="submitOrder()">
+        Submit Order + PDF + WhatsApp
+      </button>
+
+      <button class="download-button" onclick="makePDF(true)">
+        Download PDF
+      </button>
+
+      <p class="note">
+        The PDF is uploaded to Google Drive and its link is included in WhatsApp.
+      </p>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <h2>Nizhal Crackers</h2>
+  <p>Crackers Products &amp; WhatsApp Order</p>
+  <p>NO.2A PAGALMEDU, ELAYAPERUMAL NALLUR, JAYANKONDAM, ARIYALUR - 612 903</p>
+  <p>Phone: +91-6381456331</p>
+  <p>© 2026 Nizhal Crackers. All Rights Reserved.</p>
+</footer>
+
+<script>
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const COMPANY_NAME = "NIZHAL CRACKERS";
+
+const COMPANY_ADDRESS =
+  "NO.2A PAGALMEDU, ELAYAPERUMAL NALLUR, JAYANKONDAM, ARIYALUR - 612 903";
+
+const COMPANY_PHONE = "+91-6381456331";
+
+const WHATSAPP_NUMBER = "916381456331";
+
+/*
+  IMPORTANT:
+  Put your 197 product images inside:
+
+  /images/
+
+  File names must be:
+  001.jpg
+  002.jpg
+  003.jpg
+  ...
+  197.jpg
+
+  Product S.No 1 uses 001.jpg
+  Product S.No 2 uses 002.jpg
+  ...
+  Product S.No 197 uses 197.jpg
+*/
+
+const IMAGE_MAP = {
+  "001": "images/001.jpg",
+  "002": "images/002.jpg",
+  "003": "images/003.jpg",
+  "004": "images/004.jpg",
+  "005": "images/005.jpg",
+  "006": "images/006.jpg",
+  "007": "images/007.jpg",
+  "008": "images/008.jpg",
+  "009": "images/009.jpg",
+  "010": "images/010.jpg",
+  "011": "images/011.jpg",
+  "012": "images/012.jpg",
+  "013": "images/013.jpg",
+  "014": "images/014.jpg",
+  "015": "images/015.jpg",
+  "016": "images/016.jpg",
+  "017": "images/017.jpg",
+  "018": "images/018.jpg",
+  "019": "images/019.jpg",
+  "020": "images/020.jpg",
+  "021": "images/021.jpg",
+  "022": "images/022.jpg",
+  "023": "images/023.jpg",
+  "024": "images/024.jpg",
+  "025": "images/025.jpg",
+  "026": "images/026.jpg",
+  "027": "images/027.jpg",
+  "028": "images/028.jpg",
+  "029": "images/029.jpg",
+  "030": "images/030.jpg",
+  "031": "images/031.jpg",
+  "032": "images/032.jpg",
+  "033": "images/033.jpg",
+  "034": "images/034.jpg",
+  "035": "images/035.jpg",
+  "036": "images/036.jpg",
+  "037": "images/037.jpg",
+  "038": "images/038.jpg",
+  "039": "images/039.jpg",
+  "040": "images/040.jpg",
+  "041": "images/041.jpg",
+  "042": "images/042.jpg",
+  "043": "images/043.jpg",
+  "044": "images/044.jpg",
+  "045": "images/045.jpg",
+  "046": "images/046.jpg",
+  "047": "images/047.jpg",
+  "048": "images/048.jpg",
+  "049": "images/049.jpg",
+  "050": "images/050.jpg",
+  "051": "images/051.jpg",
+  "052": "images/052.jpg",
+  "053": "images/053.jpg",
+  "054": "images/054.jpg",
+  "055": "images/055.jpg",
+  "056": "images/056.jpg",
+  "057": "images/057.jpg",
+  "058": "images/058.jpg",
+  "059": "images/059.jpg",
+  "060": "images/060.jpg",
+  "061": "images/061.jpg",
+  "062": "images/062.jpg",
+  "063": "images/063.jpg",
+  "064": "images/064.jpg",
+  "065": "images/065.jpg",
+  "066": "images/066.jpg",
+  "067": "images/067.jpg",
+  "068": "images/068.jpg",
+  "069": "images/069.jpg",
+  "070": "images/070.jpg",
+  "071": "images/071.jpg",
+  "072": "images/072.jpg",
+  "073": "images/073.jpg",
+  "074": "images/074.jpg",
+  "075": "images/075.jpg",
+  "076": "images/076.jpg",
+  "077": "images/077.jpg",
+  "078": "images/078.jpg",
+  "079": "images/079.jpg",
+  "080": "images/080.jpg",
+  "081": "images/081.jpg",
+  "082": "images/082.jpg",
+  "083": "images/083.jpg",
+  "084": "images/084.jpg",
+  "085": "images/085.jpg",
+  "086": "images/086.jpg",
+  "087": "images/087.jpg",
+  "088": "images/088.jpg",
+  "089": "images/089.jpg",
+  "090": "images/090.jpg",
+  "091": "images/091.jpg",
+  "092": "images/092.jpg",
+  "093": "images/093.jpg",
+  "094": "images/094.jpg",
+  "095": "images/095.jpg",
+  "096": "images/096.jpg",
+  "097": "images/097.jpg",
+  "098": "images/098.jpg",
+  "099": "images/099.jpg",
+  "100": "images/100.jpg",
+  "101": "images/101.jpg",
+  "102": "images/102.jpg",
+  "103": "images/103.jpg",
+  "104": "images/104.jpg",
+  "105": "images/105.jpg",
+  "106": "images/106.jpg",
+  "107": "images/107.jpg",
+  "108": "images/108.jpg",
+  "109": "images/109.jpg",
+  "110": "images/110.jpg",
+  "111": "images/111.jpg",
+  "112": "images/112.jpg",
+  "113": "images/113.jpg",
+  "114": "images/114.jpg",
+  "115": "images/115.jpg",
+  "116": "images/116.jpg",
+  "117": "images/117.jpg",
+  "118": "images/118.jpg",
+  "119": "images/119.jpg",
+  "120": "images/120.jpg",
+  "121": "images/121.jpg",
+  "122": "images/122.jpg",
+  "123": "images/123.jpg",
+  "124": "images/124.jpg",
+  "125": "images/125.jpg",
+  "126": "images/126.jpg",
+  "127": "images/127.jpg",
+  "128": "images/128.jpg",
+  "129": "images/129.jpg",
+  "130": "images/130.jpg",
+  "131": "images/131.jpg",
+  "132": "images/132.jpg",
+  "133": "images/133.jpg",
+  "134": "images/134.jpg",
+  "135": "images/135.jpg",
+  "136": "images/136.jpg",
+  "137": "images/137.jpg",
+  "138": "images/138.jpg",
+  "139": "images/139.jpg",
+  "140": "images/140.jpg",
+  "141": "images/141.jpg",
+  "142": "images/142.jpg",
+  "143": "images/143.jpg",
+  "144": "images/144.jpg",
+  "145": "images/145.jpg",
+  "146": "images/146.jpg",
+  "147": "images/147.jpg",
+  "148": "images/148.jpg",
+  "149": "images/149.jpg",
+  "150": "images/150.jpg",
+  "151": "images/151.jpg",
+  "152": "images/152.jpg",
+  "153": "images/153.jpg",
+  "154": "images/154.jpg",
+  "155": "images/155.jpg",
+  "156": "images/156.jpg",
+  "157": "images/157.jpg",
+  "158": "images/158.jpg",
+  "159": "images/159.jpg",
+  "160": "images/160.jpg",
+  "161": "images/161.jpg",
+  "162": "images/162.jpg",
+  "163": "images/163.jpg",
+  "164": "images/164.jpg",
+  "165": "images/165.jpg",
+  "166": "images/166.jpg",
+  "167": "images/167.jpg",
+  "168": "images/168.jpg",
+  "169": "images/169.jpg",
+  "170": "images/170.jpg",
+  "171": "images/171.jpg",
+  "172": "images/172.jpg",
+  "173": "images/173.jpg",
+  "174": "images/174.jpg",
+  "175": "images/175.jpg",
+  "176": "images/176.jpg",
+  "177": "images/177.jpg",
+  "178": "images/178.jpg",
+  "179": "images/179.jpg",
+  "180": "images/180.jpg",
+  "181": "images/181.jpg",
+  "182": "images/182.jpg",
+  "183": "images/183.jpg",
+  "184": "images/184.jpg",
+  "185": "images/185.jpg",
+  "186": "images/186.jpg",
+  "187": "images/187.jpg",
+  "188": "images/188.jpg",
+  "189": "images/189.jpg",
+  "190": "images/190.jpg",
+  "191": "images/191.jpg",
+  "192": "images/192.jpg",
+  "193": "images/193.jpg",
+  "194": "images/194.jpg",
+  "195": "images/195.jpg",
+  "196": "images/196.jpg",
+  "197": "images/197.jpg",
+};
+
+/* fallback image */
+const FALLBACK_IMAGE = "images/placeholder.jpg";
+
+/* =========================================================
+   PRODUCTS + CART
+========================================================= */
+
+let products = [];
+
+let cart = JSON.parse(
+  localStorage.getItem("nizhalCrackersCart") || "{}"
+);
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+function getProductSno(product, index) {
+  const value = Number(product.sno);
+
+  if (Number.isFinite(value) && value >= 1 && value <= 197) {
+    return value;
+  }
+
+  return index + 1;
+}
+
+function getProductImage(product, index) {
+  const sno = getProductSno(product, index);
+  return IMAGE_MAP[String(sno).padStart(3, "0")] || FALLBACK_IMAGE;
+}
+
+function imageFallback(img) {
+  img.onerror = null;
+  img.src = FALLBACK_IMAGE;
+}
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* =========================================================
+   LOAD PRODUCTS
+========================================================= */
+
+async function loadProducts() {
+  const status = document.getElementById("status");
+
+  try {
+    const response = await fetch("/api/products", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Product API HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid product data");
+    }
+
+    products = data
+      .map((product, index) => ({
+        ...product,
+
+        id: String(
+          product.id ??
+          product.sno ??
+          index + 1
+        ),
+
+        sno: getProductSno(product, index),
+
+        name: String(product.name ?? ""),
+
+        unit: String(product.unit ?? ""),
+
+        mrp: Number(product.mrp ?? 0),
+
+        discount: Number(product.discount ?? 0),
+
+        price: Number(product.price ?? 0),
+
+        image: getProductImage(product, index)
+      }))
+      .filter(product => product.name.trim() !== "");
+
+    if (!products.length) {
+      throw new Error("No products found");
+    }
+
+    /*
+      Remove old cart items that no longer exist.
+    */
+    Object.keys(cart).forEach(id => {
+      if (!products.some(p => String(p.id) === String(id))) {
+        delete cart[id];
+      }
+    });
+
+    saveCart();
+    buildUnits();
+    renderProducts();
+
+    status.textContent =
+      products.length + " products loaded from Google Sheet.";
+
+  } catch (error) {
+    console.error(error);
+
+    status.textContent =
+      "Unable to load products. Please check Google Sheet access.";
+  }
+}
+
+/* =========================================================
+   UNIT FILTER
+========================================================= */
+
+function buildUnits() {
+  const select = document.getElementById("unitSelect");
+
+  const units = [
+    ...new Set(
+      products
+        .map(p => p.unit)
+        .filter(Boolean)
+    )
+  ];
+
+  select.innerHTML = '<option value="">All Units</option>';
+
+  units.forEach(unit => {
+    const option = document.createElement("option");
+
+    option.value = unit;
+    option.textContent = unit;
+
+    select.appendChild(option);
+  });
+}
+
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
+
+function renderProducts() {
+  const grid = document.getElementById("grid");
+
+  const search =
+    String(document.getElementById("search").value || "")
+      .toLowerCase()
+      .trim();
+
+  const selectedUnit =
+    document.getElementById("unitSelect").value;
+
+  const filtered = products.filter(product => {
+    const matchesSearch =
+      !search ||
+      product.name.toLowerCase().includes(search);
+
+    const matchesUnit =
+      !selectedUnit ||
+      product.unit === selectedUnit;
+
+    return matchesSearch && matchesUnit;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = "<p>No products found.</p>";
+    updateCart();
+    return;
+  }
+
+  grid.innerHTML = filtered.map(product => {
+    const discountText =
+      product.discount > 0
+        ? product.discount + "% OFF"
+        : "BEST PRICE";
+
+    return `
+      <article class="card">
+
+        <div class="image-wrap">
+          <img
+            class="product-image"
+            src="${escapeHTML(product.image)}"
+            alt="${escapeHTML(product.name)}"
+            loading="lazy"
+            onerror="imageFallback(this)"
+          >
+        </div>
+
+        <span class="discount-badge">
+          ${escapeHTML(discountText)}
+        </span>
+
+        <div class="product-name">
+          ${escapeHTML(product.name)}
+        </div>
+
+        <div class="product-unit">
+          ${escapeHTML(product.unit)}
+        </div>
+
+        <div class="mrp">
+          MRP Rs.${Number(product.mrp || 0).toLocaleString("en-IN")}
+        </div>
+
+        <div class="price">
+          Rs.${Number(product.price || 0).toLocaleString("en-IN")}
+        </div>
+
+        <button
+          class="add-button"
+          type="button"
+          onclick="addToCart('${String(product.id).replace(/'/g, "\\'")}')"
+        >
+          + Add to Cart
+        </button>
+
+      </article>
+    `;
+  }).join("");
+
+  updateCart();
+}
+
+/* =========================================================
+   CART
+========================================================= */
+
+function addToCart(id) {
+  id = String(id);
+
+  const product = products.find(
+    p => String(p.id) === id
+  );
+
+  if (!product) {
+    alert("Product not found. Please refresh the page.");
+    return;
+  }
+
+  cart[id] = (Number(cart[id]) || 0) + 1;
+
+  saveCart();
+  updateCart();
+}
+
+function changeQuantity(id, amount) {
+  id = String(id);
+
+  cart[id] =
+    (Number(cart[id]) || 0) +
+    Number(amount);
+
+  if (cart[id] <= 0) {
+    delete cart[id];
+  }
+
+  saveCart();
+  updateCart();
+}
+
+function getCartItems() {
+  return Object.entries(cart)
+    .map(([id, quantity]) => {
+      const product = products.find(
+        p => String(p.id) === String(id)
+      );
+
+      if (!product) return null;
+
+      return {
+        product,
+        quantity: Number(quantity) || 0
+      };
+    })
+    .filter(Boolean);
+}
+
+function getCartTotal() {
+  return getCartItems().reduce(
+    (total, item) =>
+      total +
+      (Number(item.product.price) || 0) *
+      item.quantity,
+    0
+  );
+}
+
+function getCartMRPTotal() {
+  return getCartItems().reduce(
+    (total, item) =>
+      total +
+      (Number(item.product.mrp) || 0) *
+      item.quantity,
+    0
+  );
+}
+
+function saveCart() {
+  localStorage.setItem(
+    "nizhalCrackersCart",
+    JSON.stringify(cart)
+  );
+}
+
+function updateCart() {
+  const items = getCartItems();
+
+  const count = items.reduce(
+    (total, item) =>
+      total + item.quantity,
+    0
+  );
+
+  document.getElementById("count").textContent = count;
+
+  const empty =
+    document.getElementById("emptyCart");
+
+  const form =
+    document.getElementById("orderForm");
+
+  empty.style.display =
+    items.length ? "none" : "block";
+
+  form.style.display =
+    items.length ? "block" : "none";
+
+  const container =
+    document.getElementById("cartItems");
+
+  container.innerHTML = items.map(item => {
+    const p = item.product;
+    const amount =
+      p.price * item.quantity;
+
+    return `
+      <div class="cart-item">
+
+        <div class="cart-row">
+
+          <img
+            class="cart-thumb"
+            src="${escapeHTML(p.image)}"
+            alt="${escapeHTML(p.name)}"
+            onerror="imageFallback(this)"
+          >
+
+          <div>
+            <div class="cart-name">
+              ${escapeHTML(p.name)}
+            </div>
+
+            <div class="cart-info">
+              ${escapeHTML(p.unit)} |
+              Rs.${Number(p.price).toFixed(2)} x
+              ${item.quantity} =
+              Rs.${amount.toFixed(2)}
+            </div>
+
+            <div class="qty-controls">
+
+              <button
+                onclick="changeQuantity('${String(p.id).replace(/'/g, "\\'")}', -1)"
+              >-</button>
+
+              <strong>${item.quantity}</strong>
+
+              <button
+                onclick="changeQuantity('${String(p.id).replace(/'/g, "\\'")}', 1)"
+              >+</button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("cartTotal").textContent =
+    "Rs." + getCartTotal().toFixed(2);
+}
+
+function openCart() {
+  document
+    .getElementById("drawer")
+    .classList.add("open");
+
+  updateCart();
+}
+
+function closeCart() {
+  document
+    .getElementById("drawer")
+    .classList.remove("open");
+}
+
+/* =========================================================
+   PDF HELPERS
+========================================================= */
+
+function money(value) {
+  return Number(value || 0).toLocaleString(
+    "en-IN",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  );
+}
+
+function drawFirework(doc, x, y, radius) {
+  doc.setDrawColor(255, 190, 0);
+  doc.setLineWidth(0.5);
+
+  for (let i = 0; i < 12; i++) {
+    const angle = Math.PI * 2 * i / 12;
+
+    const x1 =
+      x + Math.cos(angle) * radius * 0.25;
+
+    const y1 =
+      y + Math.sin(angle) * radius * 0.25;
+
+    const x2 =
+      x + Math.cos(angle) * radius;
+
+    const y2 =
+      y + Math.sin(angle) * radius;
+
+    doc.line(x1, y1, x2, y2);
+  }
+
+  doc.setFillColor(255, 210, 20);
+  doc.circle(x, y, 1.5, "F");
+}
+
+function drawPDFHeader(doc, pageNumber) {
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+  doc.setFillColor(166, 0, 0);
+  doc.rect(0, 0, pageWidth, 42, "F");
+
+  doc.setFillColor(235, 91, 4);
+  doc.rect(0, 38, pageWidth, 4, "F");
+
+  drawFirework(doc, 20, 15, 11);
+  drawFirework(doc, pageWidth - 20, 13, 9);
+
+  doc.setTextColor(255,255,255);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(22);
+  doc.text(COMPANY_NAME, 15, 15);
+
+  doc.setFontSize(7.8);
+  doc.setFont("helvetica","normal");
+
+  const addressLines =
+    doc.splitTextToSize(
+      COMPANY_ADDRESS,
+      115
+    );
+
+  doc.text(addressLines, 15, 22);
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(8);
+
+  doc.text(
+    "CONTACT",
+    pageWidth - 15,
+    12,
+    {align:"right"}
+  );
+
+  doc.setFontSize(10);
+
+  doc.text(
+    COMPANY_PHONE,
+    pageWidth - 15,
+    19,
+    {align:"right"}
+  );
+
+  doc.setFontSize(8);
+
+  doc.text(
+    "ORDER RECEIPT",
+    pageWidth - 15,
+    27,
+    {align:"right"}
+  );
+
+  doc.setFontSize(7);
+
+  doc.text(
+    "Page " + pageNumber,
+    pageWidth - 15,
+    pageHeight - 8,
+    {align:"right"}
+  );
+}
+
+function drawPDFFooter(doc) {
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+  doc.setDrawColor(220,70,0);
+  doc.setLineWidth(0.5);
+
+  doc.line(
+    15,
+    pageHeight - 15,
+    pageWidth - 15,
+    pageHeight - 15
+  );
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(7);
+  doc.setTextColor(100,70,50);
+
+  doc.text(
+    COMPANY_NAME + " | " + COMPANY_PHONE,
+    15,
+    pageHeight - 8
+  );
+
+  doc.text(
+    "Thank you for your order",
+    pageWidth - 15,
+    pageHeight - 8,
+    {align:"right"}
+  );
+}
+
+/* =========================================================
+   MAKE PDF
+========================================================= */
+
+function makePDF(saveFile = false) {
+  if (typeof window.jspdf === "undefined") {
+    alert("PDF library is not loaded. Please refresh.");
+    return null;
+  }
+
+  const items = getCartItems();
+
+  if (!items.length) {
+    alert("Please add at least one product to the cart.");
+    return null;
+  }
+
+  const customerName =
+    document.getElementById("customerName").value.trim() || "-";
+
+  const customerPhone =
+    document.getElementById("customerPhone").value.trim() || "-";
+
+  const deliveryAddress =
+    document.getElementById("customerAddress").value.trim() || "-";
+
+  const {jsPDF} = window.jspdf;
+
+  const doc = new jsPDF({
+    orientation:"portrait",
+    unit:"mm",
+    format:"a4"
+  });
+
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+  drawPDFHeader(doc, 1);
+
+  doc.setFillColor(255,244,225);
+
+  doc.roundedRect(
+    15,48,pageWidth-30,18,4,4,"F"
+  );
+
+  doc.setTextColor(165,0,0);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(17);
+
+  doc.text(
+    "ORDER RECEIPT",
+    pageWidth / 2,
+    60,
+    {align:"center"}
+  );
+
+  const orderDate = new Date();
+
+  const dateText =
+    orderDate.toLocaleDateString("en-IN");
+
+  const orderId =
+    "NC" +
+    orderDate.toISOString()
+      .replace(/\D/g,"")
+      .slice(0,14);
+
+  doc.setTextColor(60,40,30);
+  doc.setFontSize(8);
+
+  doc.text(
+    "ORDER ID: " + orderId,
+    17,
+    72
+  );
+
+  doc.text(
+    "DATE: " + dateText,
+    pageWidth - 17,
+    72,
+    {align:"right"}
+  );
+
+  const tableRows =
+    items.map((item,index) => {
+      const p = item.product;
+      const qty = item.quantity;
+      const amount =
+        Number(p.price || 0) * qty;
+
+      return [
+        String(index + 1),
+        p.name,
+        String(qty),
+        "Rs." + money(p.mrp),
+        Number(p.discount || 0) + "%",
+        "Rs." + money(amount)
+      ];
+    });
+
+  doc.autoTable({
+    startY:78,
+
+    margin:{
+      left:15,
+      right:15,
+      bottom:25
+    },
+
+    head:[[
+      "S.NO",
+      "PRODUCT",
+      "QTY",
+      "MRP",
+      "DISCOUNT",
+      "TOTAL AMOUNT"
+    ]],
+
+    body:tableRows,
+
+    theme:"grid",
+
+    styles:{
+      font:"helvetica",
+      fontSize:8.2,
+      cellPadding:3,
+      lineColor:[235,210,185],
+      lineWidth:0.25,
+      textColor:[35,25,20],
+      valign:"middle"
+    },
+
+    headStyles:{
+      fillColor:[175,0,0],
+      textColor:[255,255,255],
+      fontStyle:"bold",
+      halign:"center",
+      fontSize:8
+    },
+
+    alternateRowStyles:{
+      fillColor:[255,249,241]
+    },
+
+    columnStyles:{
+      0:{cellWidth:12,halign:"center"},
+      1:{cellWidth:76},
+      2:{cellWidth:16,halign:"center"},
+      3:{cellWidth:26,halign:"right"},
+      4:{cellWidth:25,halign:"center"},
+      5:{cellWidth:30,halign:"right"}
+    },
+
+    didDrawPage:function(){
+      const pageNumber =
+        doc.internal.getNumberOfPages();
+
+      drawPDFHeader(doc,pageNumber);
+      drawPDFFooter(doc);
+    }
+  });
+
+  let finalY =
+    doc.lastAutoTable.finalY + 8;
+
+  if (finalY > pageHeight - 100) {
+    doc.addPage();
+
+    const pageNumber =
+      doc.internal.getNumberOfPages();
+
+    drawPDFHeader(doc,pageNumber);
+    drawPDFFooter(doc);
+
+    finalY = 55;
+  }
+
+  const totalMRP = getCartMRPTotal();
+  const totalAmount = getCartTotal();
+  const totalDiscount = totalMRP - totalAmount;
+
+  const boxX = pageWidth - 95;
+  const boxWidth = 80;
+
+  doc.setFillColor(255,245,229);
+
+  doc.roundedRect(
+    boxX,
+    finalY,
+    boxWidth,
+    38,
+    4,
+    4,
+    "F"
+  );
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(9);
+  doc.setTextColor(60,40,30);
+
+  doc.text("TOTAL MRP",boxX+6,finalY+9);
+
+  doc.text(
+    "Rs." + money(totalMRP),
+    boxX + boxWidth - 6,
+    finalY + 9,
+    {align:"right"}
+  );
+
+  doc.text(
+    "TOTAL DISCOUNT",
+    boxX+6,
+    finalY+18
+  );
+
+  doc.text(
+    "Rs." + money(totalDiscount),
+    boxX + boxWidth - 6,
+    finalY + 18,
+    {align:"right"}
+  );
+
+  doc.setFillColor(170,0,0);
+
+  doc.roundedRect(
+    boxX,
+    finalY+22,
+    boxWidth,
+    16,
+    4,
+    4,
+    "F"
+  );
+
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(10);
+
+  doc.text(
+    "GRAND TOTAL",
+    boxX+6,
+    finalY+32
+  );
+
+  doc.setFontSize(12);
+
+  doc.text(
+    "Rs." + money(totalAmount),
+    boxX + boxWidth - 6,
+    finalY + 32,
+    {align:"right"}
+  );
+
+  let customerY = finalY + 48;
+
+  if (customerY > pageHeight - 75) {
+    doc.addPage();
+
+    const pageNumber =
+      doc.internal.getNumberOfPages();
+
+    drawPDFHeader(doc,pageNumber);
+    drawPDFFooter(doc);
+
+    customerY = 55;
+  }
+
+  doc.setFillColor(255,248,239);
+
+  doc.roundedRect(
+    15,
+    customerY,
+    82,
+    48,
+    4,
+    4,
+    "F"
+  );
+
+  doc.setFillColor(175,0,0);
+
+  doc.roundedRect(
+    15,
+    customerY,
+    82,
+    10,
+    4,
+    4,
+    "F"
+  );
+
+  doc.rect(
+    15,
+    customerY+6,
+    82,
+    4,
+    "F"
+  );
+
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(9);
+
+  doc.text(
+    "CUSTOMER DETAILS",
+    21,
+    customerY+7
+  );
+
+  doc.setTextColor(45,30,20);
+  doc.setFontSize(8);
+
+  doc.text(
+    "Name",
+    21,
+    customerY+19
+  );
+
+  doc.text(
+    ": " + customerName,
+    39,
+    customerY+19
+  );
+
+  doc.text(
+    "Mobile",
+    21,
+    customerY+29
+  );
+
+  doc.text(
+    ": " + customerPhone,
+    39,
+    customerY+29
+  );
+
+  doc.setFillColor(255,248,239);
+
+  doc.roundedRect(
+    105,
+    customerY,
+    pageWidth-120,
+    48,
+    4,
+    4,
+    "F"
+  );
+
+  doc.setFillColor(235,91,4);
+
+  doc.roundedRect(
+    105,
+    customerY,
+    pageWidth-120,
+    10,
+    4,
+    4,
+    "F"
+  );
+
+  doc.rect(
+    105,
+    customerY+6,
+    pageWidth-120,
+    4,
+    "F"
+  );
+
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(9);
+
+  doc.text(
+    "DELIVERY ADDRESS",
+    111,
+    customerY+7
+  );
+
+  doc.setTextColor(45,30,20);
+  doc.setFontSize(8);
+
+  const addressLines =
+    doc.splitTextToSize(
+      deliveryAddress,
+      pageWidth-132
+    );
+
+  doc.text(
+    addressLines,
+    111,
+    customerY+20
+  );
+
+  const thankY = customerY + 55;
+
+  doc.setFillColor(255,248,239);
+
+  doc.roundedRect(
+    15,
+    thankY,
+    pageWidth-30,
+    27,
+    5,
+    5,
+    "F"
+  );
+
+  doc.setTextColor(175,0,0);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(13);
+
+  doc.text(
+    "THANK YOU FOR YOUR ORDER",
+    pageWidth/2,
+    thankY+11,
+    {align:"center"}
+  );
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(8);
+  doc.setTextColor(80,60,45);
+
+  doc.text(
+    "NIZHAL CRACKERS - Quality Products - Safe Packaging",
+    pageWidth/2,
+    thankY+19,
+    {align:"center"}
+  );
+
+  const fileName =
+    "Nizhal_Crackers_Order_" +
+    orderId +
+    ".pdf";
+
+  if (saveFile) {
+    doc.save(fileName);
+  }
+
+  return {
+    doc,
+    items,
+    totalMRP,
+    totalDiscount,
+    totalAmount,
+    customerName,
+    customerPhone,
+    deliveryAddress,
+    orderId,
+    fileName
+  };
+}
+
+/* =========================================================
+   PDF BASE64
+========================================================= */
+
+async function pdfToBase64(blob) {
+  const buffer = await blob.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  let binary = "";
+  const chunkSize = 0x8000;
+
+  for (
+    let i=0;
+    i<bytes.length;
+    i+=chunkSize
+  ) {
+    const chunk =
+      bytes.subarray(
+        i,
+        Math.min(i+chunkSize,bytes.length)
+      );
+
+    binary +=
+      String.fromCharCode(...chunk);
+  }
+
+  return btoa(binary);
+}
+
+/* =========================================================
+   SUBMIT ORDER
+========================================================= */
+
+async function submitOrder() {
+  const name =
+    document.getElementById("customerName")
+      .value.trim();
+
+  const phone =
+    document.getElementById("customerPhone")
+      .value.trim();
+
+  if (!name) {
+    alert("Please enter customer name.");
+    return;
+  }
+
+  if (!phone) {
+    alert("Please enter mobile number.");
+    return;
+  }
+
+  const items = getCartItems();
+
+  if (!items.length) {
+    alert("Please add products to the cart.");
+    return;
+  }
+
+  const submitButton =
+    document.getElementById("submitButton");
+
+  const oldText =
+    submitButton.textContent;
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Preparing PDF...";
+
+  try {
+    const receipt = makePDF(false);
+
+    if (!receipt) {
+      throw new Error("PDF could not be created.");
+    }
+
+    const blob =
+      receipt.doc.output("blob");
+
+    const pdfBase64 =
+      await pdfToBase64(blob);
+
+    submitButton.textContent =
+      "Uploading PDF...";
+
+    const response =
+      await fetch(
+        "/api/upload-pdf",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            pdfBase64,
+            fileName:receipt.fileName
+          })
+        }
+      );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      throw new Error(
+        data.error ||
+        "Google Drive PDF upload failed."
+      );
+    }
+
+    submitButton.textContent =
+      "Opening WhatsApp...";
+
+    const message = [];
+
+    message.push("*NIZHAL CRACKERS ORDER*");
+    message.push("");
+
+    receipt.items.forEach((item,index) => {
+      const amount =
+        item.product.price *
+        item.quantity;
+
+      message.push(
+        `${index+1}. ${item.product.name} x ${item.quantity} = Rs.${amount.toFixed(2)}`
+      );
+    });
+
+    message.push("");
+
+    message.push(
+      `*TOTAL = Rs.${receipt.totalAmount.toFixed(2)}*`
+    );
+
+    message.push("");
+    message.push(`Customer: ${receipt.customerName}`);
+    message.push(`Mobile: ${receipt.customerPhone}`);
+    message.push(`Delivery Address: ${receipt.deliveryAddress}`);
+    message.push("");
+    message.push("*Order PDF:*");
+
+    if (data.viewUrl) {
+      message.push(data.viewUrl);
+    }
+
+    const whatsappUrl =
+      "https://wa.me/" +
+      WHATSAPP_NUMBER +
+      "?text=" +
+      encodeURIComponent(
+        message.join("\n")
+      );
+
+    window.location.href = whatsappUrl;
+
+  } catch(error) {
+    console.error(error);
+
+    alert(
+      "PDF upload failed.\n\n" +
+      error.message
+    );
+
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = oldText;
+  }
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+loadProducts();
+</script>
+
+</body>
+</html>

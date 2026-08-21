@@ -1,0 +1,12 @@
+{
+  "name": "nilal-crackers",
+  "version": "1.0.0",
+  "description": "Nizhal Crackers Online Booking Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

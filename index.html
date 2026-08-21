@@ -1,0 +1,2983 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Nizhal Crackers - Online Booking</title>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- jsPDF AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff8ef;
+      color: #20130d;
+    }
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid #eadbca;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #a50000;
+      letter-spacing: .4px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    .cart {
+      border: none;
+      background: #128c7e;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 25px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ================================
+       HERO
+    ================================= */
+
+    .hero {
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          #620000,
+          #b00000,
+          #e85d04,
+          #ff8c00
+        );
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 48px 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 64px);
+      font-weight: 900;
+    }
+
+    .hero p {
+      font-size: 17px;
+      margin-top: 12px;
+    }
+
+    /* ================================
+       MAIN
+    ================================= */
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      padding: 14px;
+      border: 1px solid #e5d2bd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .unit-select {
+      padding: 14px;
+      border: 1px solid #e5d2bd;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .status {
+      color: #765f50;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    /* ================================
+       PRODUCT GRID
+    ================================= */
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fill, minmax(215px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #eadbca;
+      border-radius: 15px;
+      padding: 14px;
+      box-shadow:
+        0 3px 10px rgba(100, 30, 0, .06);
+    }
+
+    .discount-badge {
+      display: inline-block;
+      background: #d00000;
+      color: white;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .product-name {
+      font-size: 17px;
+      font-weight: 900;
+      margin: 12px 0 8px;
+      min-height: 40px;
+    }
+
+    .product-unit {
+      font-size: 12px;
+      color: #76665c;
+    }
+
+    .mrp {
+      color: #888;
+      text-decoration: line-through;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .price {
+      font-size: 21px;
+      font-weight: 900;
+      margin: 6px 0 12px;
+      color: #1e120d;
+    }
+
+    .add-button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      background: #a80000;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .add-button:hover {
+      background: #790000;
+    }
+
+    /* ================================
+       DRAWER
+    ================================= */
+
+    .drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+    }
+
+    .drawer.open {
+      display: block;
+    }
+
+    .shade {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+    }
+
+    .panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(480px, 100%);
+      height: 100%;
+      background: white;
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eadbca;
+      padding-bottom: 10px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+    }
+
+    .close-button {
+      border: 1px solid #ccc;
+      background: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .cart-item {
+      padding: 13px 0;
+      border-bottom: 1px solid #eadbca;
+    }
+
+    .cart-name {
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .cart-info {
+      color: #76665c;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .qty-controls button {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #bbb;
+      background: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .total-box {
+      display: flex;
+      justify-content: space-between;
+      font-size: 23px;
+      font-weight: 900;
+      padding: 18px 0;
+    }
+
+    .field {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      margin-bottom: 9px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea.field {
+      resize: vertical;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 9px;
+      background: #25d366;
+      color: #073b1a;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .download-button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 9px;
+      background: #222;
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .note {
+      color: #777;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        padding: 10px;
+      }
+
+      .product-name {
+        font-size: 15px;
+      }
+
+      .hero-inner {
+        padding: 35px 15px;
+      }
+    }
+
+
+    /* =====================================================
+       PRODUCT IMAGES - ADDED
+    ===================================================== */
+
+    .product-image-box {
+      width: 100%;
+      height: 190px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+
+    <div class="brand">
+      <div class="logo">NIZHAL CRACKERS</div>
+      <div class="tagline">Online Booking</div>
+    </div>
+
+    <button class="cart" onclick="openCart()">
+      Cart <span id="count">0</span>
+    </button>
+
+  </div>
+</header>
+
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <h1>Nizhal Crackers</h1>
+
+    <p>
+      Select your crackers and place your order through WhatsApp.
+    </p>
+
+  </div>
+</section>
+
+
+<main>
+
+  <div class="toolbar">
+
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="Search products..."
+      oninput="renderProducts()"
+    >
+
+    <select
+      id="unitSelect"
+      class="unit-select"
+      onchange="renderProducts()"
+    >
+      <option value="">All Units</option>
+    </select>
+
+  </div>
+
+  <div id="status" class="status">
+    Loading products...
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+</main>
+
+
+<!-- ================================
+     CART DRAWER
+================================= -->
+
+<div id="drawer" class="drawer">
+
+  <div
+    class="shade"
+    onclick="closeCart()"
+  ></div>
+
+  <aside class="panel">
+
+    <div class="panel-head">
+
+      <h2>Order</h2>
+
+      <button
+        class="close-button"
+        onclick="closeCart()"
+      >
+        X
+      </button>
+
+    </div>
+
+
+    <div id="cartItems"></div>
+
+    <p
+      id="emptyCart"
+      class="note"
+    >
+      Your cart is empty.
+    </p>
+
+
+    <div
+      id="orderForm"
+      style="display:none"
+    >
+
+      <div class="total-box">
+        <span>Total</span>
+        <span id="cartTotal">Rs.0.00</span>
+      </div>
+
+
+      <input
+        id="customerName"
+        class="field"
+        type="text"
+        placeholder="Customer Name *"
+      >
+
+
+      <input
+        id="customerPhone"
+        class="field"
+        type="tel"
+        placeholder="Mobile Number *"
+      >
+
+
+      <textarea
+        id="customerAddress"
+        class="field"
+        rows="4"
+        placeholder="Delivery Address"
+      ></textarea>
+
+
+      <button
+        id="submitButton"
+        class="submit-button"
+        onclick="submitOrder()"
+      >
+        Submit Order + PDF + WhatsApp
+      </button>
+
+
+      <button
+        class="download-button"
+        onclick="makePDF(true)"
+      >
+        Download PDF
+      </button>
+
+
+      <p class="note">
+        The PDF will be uploaded to Google Drive and the
+        clickable PDF link will be sent through WhatsApp.
+      </p>
+
+    </div>
+
+  </aside>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+const COMPANY_NAME = "NIZHAL CRACKERS";
+
+const COMPANY_ADDRESS =
+  "NO.2A PAGALMEDU, ELAYAPERUMAL NALLUR, JAYANKONDAM, ARIYALUR - 612 903";
+
+const COMPANY_PHONE = "+91-6381456331";
+
+const WHATSAPP_NUMBER = "916381456331";
+
+const GOOGLE_APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzvlgXHs8HMW-6vnsD3OFyKJ2u-c2wFECmaYz7jVygXum_4P2UZA_2VtBBXzuH266hWoA/exec";
+
+
+/* =====================================================
+   PRODUCTS
+===================================================== */
+
+let products = [];
+
+/* =====================================================
+   PRODUCT IMAGE PATH - ADDED
+===================================================== */
+
+function getProductImage(product) {
+
+  const number =
+    String(
+      Number(
+        product.sno || product.id || 1
+      )
+    ).padStart(3, "0");
+
+  return `/${number}.png`;
+
+}
+
+let cart =
+  JSON.parse(
+    localStorage.getItem("nizhalCrackersCart") || "{}"
+  );
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   LOAD PRODUCTS
+===================================================== */
+
+async function loadProducts() {
+
+  const status =
+    document.getElementById("status");
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/products",
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Product API HTTP " +
+        response.status
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    if (!Array.isArray(data)) {
+
+      throw new Error(
+        "Invalid product data."
+      );
+
+    }
+
+
+    products =
+      data.map(
+        (product, index) => ({
+
+          ...product,
+
+          id: String(
+            product.id ??
+            index + 1
+          ),
+
+          sno:
+            Number(
+              product.sno ??
+              index + 1
+            ),
+
+          name:
+            String(
+              product.name ?? ""
+            ),
+
+          unit:
+            String(
+              product.unit ?? ""
+            ),
+
+          mrp:
+            Number(
+              product.mrp ?? 0
+            ),
+
+          discount:
+            Number(
+              product.discount ?? 0
+            ),
+
+          price:
+            Number(
+              product.price ?? 0
+            )
+
+        })
+      );
+
+
+    if (!products.length) {
+
+      throw new Error(
+        "No products found."
+      );
+
+    }
+
+
+    /* Remove deleted products from cart */
+
+    Object.keys(cart)
+      .forEach(id => {
+
+        if (
+          !products.some(
+            p =>
+              String(p.id) === String(id)
+          )
+        ) {
+
+          delete cart[id];
+
+        }
+
+      });
+
+
+    saveCart();
+
+    buildUnits();
+
+    renderProducts();
+
+    status.textContent =
+      products.length +
+      " products loaded from Google Sheet.";
+
+  }
+  catch (error) {
+
+    console.error(error);
+
+    status.textContent =
+      "Unable to load products. Please check Google Sheet access.";
+
+  }
+
+}
+
+
+/* =====================================================
+   UNITS
+===================================================== */
+
+function buildUnits() {
+
+  const select =
+    document.getElementById(
+      "unitSelect"
+    );
+
+
+  const units =
+    [
+      ...new Set(
+        products
+          .map(p => p.unit)
+          .filter(Boolean)
+      )
+    ];
+
+
+  select.innerHTML =
+    '<option value="">All Units</option>';
+
+
+  units.forEach(unit => {
+
+    const option =
+      document.createElement("option");
+
+    option.value = unit;
+
+    option.textContent = unit;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =====================================================
+   RENDER PRODUCTS
+===================================================== */
+
+function renderProducts() {
+
+  const grid =
+    document.getElementById(
+      "grid"
+    );
+
+
+  const search =
+    String(
+      document.getElementById(
+        "search"
+      ).value || ""
+    )
+      .toLowerCase()
+      .trim();
+
+
+  const selectedUnit =
+    document.getElementById(
+      "unitSelect"
+    ).value;
+
+
+  const filtered =
+    products.filter(product => {
+
+      const matchesSearch =
+        !search ||
+        product.name
+          .toLowerCase()
+          .includes(search);
+
+
+      const matchesUnit =
+        !selectedUnit ||
+        product.unit === selectedUnit;
+
+
+      return (
+        matchesSearch &&
+        matchesUnit
+      );
+
+    });
+
+
+  if (!filtered.length) {
+
+    grid.innerHTML =
+      "<p>No products found.</p>";
+
+    updateCart();
+
+    return;
+
+  }
+
+
+  grid.innerHTML =
+    filtered
+      .map(product => {
+
+        const discountText =
+          product.discount > 0
+            ? `${product.discount}% OFF`
+            : "SPECIAL";
+
+
+        return `
+
+          <div class="card">
+
+            <span class="discount-badge">
+              ${escapeHTML(discountText)}
+            </span>
+
+            <!-- PRODUCT IMAGE - ADDED -->
+            <div class="product-image-box">
+              <img
+                src="${getProductImage(product)}"
+                alt="${escapeHTML(product.name)}"
+                class="product-image"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              >
+            </div>
+
+            <div class="product-name">
+              ${escapeHTML(product.name)}
+            </div>
+
+            <div class="product-unit">
+              ${escapeHTML(product.unit)}
+            </div>
+
+            <div class="mrp">
+              MRP Rs.${Number(product.mrp || 0).toLocaleString("en-IN")}
+            </div>
+
+            <div class="price">
+              Rs.${Number(product.price || 0).toLocaleString("en-IN")}
+            </div>
+
+            <button
+              class="add-button"
+              onclick="addToCart('${String(product.id).replace(/'/g, "\\'")}')"
+            >
+              + Add to Cart
+            </button>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+
+  updateCart();
+
+}
+
+
+/* =====================================================
+   ADD TO CART
+===================================================== */
+
+function addToCart(id) {
+
+  id = String(id);
+
+
+  const product =
+    products.find(
+      p =>
+        String(p.id) === id
+    );
+
+
+  if (!product) {
+
+    alert(
+      "Product not found. Please refresh the page."
+    );
+
+    return;
+
+  }
+
+
+  cart[id] =
+    (Number(cart[id]) || 0) + 1;
+
+
+  saveCart();
+
+  openCart();
+
+}
+
+
+/* =====================================================
+   CHANGE QUANTITY
+===================================================== */
+
+function changeQuantity(
+  id,
+  amount
+) {
+
+  id = String(id);
+
+
+  cart[id] =
+    (Number(cart[id]) || 0) +
+    Number(amount);
+
+
+  if (
+    cart[id] <= 0
+  ) {
+
+    delete cart[id];
+
+  }
+
+
+  saveCart();
+
+  updateCart();
+
+}
+
+
+/* =====================================================
+   CART ITEMS
+===================================================== */
+
+function getCartItems() {
+
+  return Object.entries(cart)
+    .map(
+      ([id, quantity]) => {
+
+        const product =
+          products.find(
+            p =>
+              String(p.id) ===
+              String(id)
+          );
+
+
+        if (!product) {
+
+          return null;
+
+        }
+
+
+        return {
+
+          product,
+
+          quantity:
+            Number(quantity) || 0
+
+        };
+
+      }
+    )
+    .filter(Boolean);
+
+}
+
+
+/* =====================================================
+   CART TOTAL
+===================================================== */
+
+function getCartTotal() {
+
+  return getCartItems()
+    .reduce(
+      (
+        total,
+        item
+      ) =>
+        total +
+        (
+          Number(
+            item.product.price
+          ) || 0
+        ) *
+        item.quantity,
+      0
+    );
+
+}
+
+
+/* =====================================================
+   TOTAL MRP
+===================================================== */
+
+function getCartMRPTotal() {
+
+  return getCartItems()
+    .reduce(
+      (
+        total,
+        item
+      ) =>
+        total +
+        (
+          Number(
+            item.product.mrp
+          ) || 0
+        ) *
+        item.quantity,
+      0
+    );
+
+}
+
+
+/* =====================================================
+   CART SAVE
+===================================================== */
+
+function saveCart() {
+
+  localStorage.setItem(
+    "nizhalCrackersCart",
+    JSON.stringify(cart)
+  );
+
+}
+
+
+/* =====================================================
+   UPDATE CART
+===================================================== */
+
+function updateCart() {
+
+  const items =
+    getCartItems();
+
+
+  const count =
+    items.reduce(
+      (
+        total,
+        item
+      ) =>
+        total +
+        item.quantity,
+      0
+    );
+
+
+  document.getElementById(
+    "count"
+  ).textContent =
+    count;
+
+
+  const empty =
+    document.getElementById(
+      "emptyCart"
+    );
+
+
+  const form =
+    document.getElementById(
+      "orderForm"
+    );
+
+
+  empty.style.display =
+    items.length
+      ? "none"
+      : "block";
+
+
+  form.style.display =
+    items.length
+      ? "block"
+      : "none";
+
+
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
+
+
+  container.innerHTML =
+    items
+      .map(item => {
+
+        const p =
+          item.product;
+
+
+        const amount =
+          p.price *
+          item.quantity;
+
+
+        return `
+
+          <div class="cart-item">
+
+            <div class="cart-name">
+              ${escapeHTML(p.name)}
+            </div>
+
+            <div class="cart-info">
+              ${escapeHTML(p.unit)}
+              |
+              Rs.${Number(p.price).toFixed(2)}
+              x
+              ${item.quantity}
+              =
+              Rs.${amount.toFixed(2)}
+            </div>
+
+            <div class="qty-controls">
+
+              <button
+                onclick="changeQuantity('${String(p.id).replace(/'/g, "\\'")}', -1)"
+              >
+                -
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                onclick="changeQuantity('${String(p.id).replace(/'/g, "\\'")}', 1)"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+
+
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    "Rs." +
+    getCartTotal().toFixed(2);
+
+}
+
+
+/* =====================================================
+   OPEN / CLOSE CART
+===================================================== */
+
+function openCart() {
+
+  document
+    .getElementById("drawer")
+    .classList.add("open");
+
+
+  updateCart();
+
+}
+
+
+function closeCart() {
+
+  document
+    .getElementById("drawer")
+    .classList.remove("open");
+
+}
+
+
+/* =====================================================
+   FORMAT MONEY
+===================================================== */
+
+function money(value) {
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    "en-IN",
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }
+  );
+
+}
+
+
+/* =====================================================
+   DRAW FIREWORK
+===================================================== */
+
+function drawFirework(
+  doc,
+  x,
+  y,
+  radius
+) {
+
+  doc.setDrawColor(
+    255,
+    190,
+    0
+  );
+
+  doc.setLineWidth(
+    0.5
+  );
+
+
+  for (
+    let i = 0;
+    i < 12;
+    i++
+  ) {
+
+    const angle =
+      (
+        Math.PI * 2 * i
+      ) / 12;
+
+
+    const x1 =
+      x +
+      Math.cos(angle) *
+      radius *
+      0.25;
+
+
+    const y1 =
+      y +
+      Math.sin(angle) *
+      radius *
+      0.25;
+
+
+    const x2 =
+      x +
+      Math.cos(angle) *
+      radius;
+
+
+    const y2 =
+      y +
+      Math.sin(angle) *
+      radius;
+
+
+    doc.line(
+      x1,
+      y1,
+      x2,
+      y2
+    );
+
+  }
+
+
+  doc.setFillColor(
+    255,
+    210,
+    20
+  );
+
+
+  doc.circle(
+    x,
+    y,
+    1.5,
+    "F"
+  );
+
+}
+
+
+/* =====================================================
+   HEADER DESIGN
+===================================================== */
+
+function drawPDFHeader(
+  doc,
+  pageNumber
+) {
+
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+
+  /* Main red header */
+
+  doc.setFillColor(
+    166,
+    0,
+    0
+  );
+
+
+  doc.rect(
+    0,
+    0,
+    pageWidth,
+    42,
+    "F"
+  );
+
+
+  /* Orange lower strip */
+
+  doc.setFillColor(
+    235,
+    91,
+    4
+  );
+
+
+  doc.rect(
+    0,
+    38,
+    pageWidth,
+    4,
+    "F"
+  );
+
+
+  /* Fireworks */
+
+  drawFirework(
+    doc,
+    20,
+    15,
+    11
+  );
+
+
+  drawFirework(
+    doc,
+    pageWidth - 20,
+    13,
+    9
+  );
+
+
+  /* Company */
+
+  doc.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    22
+  );
+
+
+  doc.text(
+    COMPANY_NAME,
+    15,
+    15
+  );
+
+
+  doc.setFontSize(
+    7.8
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "normal"
+  );
+
+
+  const addressLines =
+    doc.splitTextToSize(
+      COMPANY_ADDRESS,
+      115
+    );
+
+
+  doc.text(
+    addressLines,
+    15,
+    22
+  );
+
+
+  /* Contact */
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  doc.text(
+    "CONTACT",
+    pageWidth - 15,
+    12,
+    {
+      align: "right"
+    }
+  );
+
+
+  doc.setFontSize(
+    10
+  );
+
+
+  doc.text(
+    COMPANY_PHONE,
+    pageWidth - 15,
+    19,
+    {
+      align: "right"
+    }
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  doc.text(
+    "ORDER RECEIPT",
+    pageWidth - 15,
+    27,
+    {
+      align: "right"
+    }
+  );
+
+
+  /* Page number */
+
+  doc.setFontSize(
+    7
+  );
+
+  doc.text(
+    "Page " +
+      pageNumber,
+    pageWidth - 15,
+    pageHeight - 8,
+    {
+      align: "right"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   PDF FOOTER
+===================================================== */
+
+function drawPDFFooter(
+  doc
+) {
+
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+
+  doc.setDrawColor(
+    220,
+    70,
+    0
+  );
+
+
+  doc.setLineWidth(
+    0.5
+  );
+
+
+  doc.line(
+    15,
+    pageHeight - 15,
+    pageWidth - 15,
+    pageHeight - 15
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "normal"
+  );
+
+
+  doc.setFontSize(
+    7
+  );
+
+
+  doc.setTextColor(
+    100,
+    70,
+    50
+  );
+
+
+  doc.text(
+    COMPANY_NAME +
+      " | " +
+      COMPANY_PHONE,
+    15,
+    pageHeight - 8
+  );
+
+
+  doc.text(
+    "Thank you for your order",
+    pageWidth - 15,
+    pageHeight - 8,
+    {
+      align: "right"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   MAKE PROFESSIONAL PDF
+===================================================== */
+
+function makePDF(
+  saveFile = false
+) {
+
+  if (
+    typeof window.jspdf ===
+    "undefined"
+  ) {
+
+    alert(
+      "PDF library is not loaded. Please refresh the page."
+    );
+
+    return null;
+
+  }
+
+
+  const items =
+    getCartItems();
+
+
+  if (!items.length) {
+
+    alert(
+      "Please add at least one product to the cart."
+    );
+
+    return null;
+
+  }
+
+
+  const customerName =
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value
+      .trim() || "-";
+
+
+  const customerPhone =
+    document
+      .getElementById(
+        "customerPhone"
+      )
+      .value
+      .trim() || "-";
+
+
+  const deliveryAddress =
+    document
+      .getElementById(
+        "customerAddress"
+      )
+      .value
+      .trim() || "-";
+
+
+  const {
+    jsPDF
+  } = window.jspdf;
+
+
+  const doc =
+    new jsPDF(
+      {
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      }
+    );
+
+
+  const pageWidth =
+    doc.internal.pageSize.getWidth();
+
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+
+  /* ================================
+     FIRST HEADER
+  ================================= */
+
+  drawPDFHeader(
+    doc,
+    1
+  );
+
+
+  /* ================================
+     RECEIPT TITLE
+  ================================= */
+
+  doc.setFillColor(
+    255,
+    244,
+    225
+  );
+
+
+  doc.roundedRect(
+    15,
+    48,
+    pageWidth - 30,
+    18,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.setTextColor(
+    165,
+    0,
+    0
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    17
+  );
+
+
+  doc.text(
+    "ORDER RECEIPT",
+    pageWidth / 2,
+    60,
+    {
+      align: "center"
+    }
+  );
+
+
+  /* ================================
+     ORDER INFO
+  ================================= */
+
+  const orderDate =
+    new Date();
+
+
+  const dateText =
+    orderDate.toLocaleDateString(
+      "en-IN"
+    );
+
+
+  const orderId =
+    "NC" +
+    orderDate
+      .toISOString()
+      .replace(/\D/g, "")
+      .slice(0, 14);
+
+
+  doc.setTextColor(
+    60,
+    40,
+    30
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.text(
+    "ORDER ID: " +
+      orderId,
+    17,
+    72
+  );
+
+
+  doc.text(
+    "DATE: " +
+      dateText,
+    pageWidth - 17,
+    72,
+    {
+      align: "right"
+    }
+  );
+
+
+  /* ================================
+     TABLE DATA
+  ================================= */
+
+  const tableRows =
+    items.map(
+      (
+        item,
+        index
+      ) => {
+
+        const p =
+          item.product;
+
+
+        const qty =
+          item.quantity;
+
+
+        const mrp =
+          Number(
+            p.mrp || 0
+          );
+
+
+        const discount =
+          Number(
+            p.discount || 0
+          );
+
+
+        const sellingPrice =
+          Number(
+            p.price || 0
+          );
+
+
+        const amount =
+          sellingPrice *
+          qty;
+
+
+        return [
+
+          String(
+            index + 1
+          ),
+
+          p.name,
+
+          String(
+            qty
+          ),
+
+          "Rs." +
+            money(mrp),
+
+          discount +
+            "%",
+
+          "Rs." +
+            money(amount)
+
+        ];
+
+      }
+    );
+
+
+  /* ================================
+     AUTO TABLE
+  ================================= */
+
+  doc.autoTable({
+
+    startY: 78,
+
+    margin: {
+      left: 15,
+      right: 15,
+      bottom: 25
+    },
+
+    head: [[
+      "S.NO",
+      "PRODUCT",
+      "QTY",
+      "MRP",
+      "DISCOUNT",
+      "TOTAL AMOUNT"
+    ]],
+
+    body:
+      tableRows,
+
+    theme:
+      "grid",
+
+    styles: {
+
+      font:
+        "helvetica",
+
+      fontSize:
+        8.2,
+
+      cellPadding:
+        3,
+
+      lineColor: [
+        235,
+        210,
+        185
+      ],
+
+      lineWidth:
+        0.25,
+
+      textColor: [
+        35,
+        25,
+        20
+      ],
+
+      valign:
+        "middle"
+
+    },
+
+    headStyles: {
+
+      fillColor: [
+        175,
+        0,
+        0
+      ],
+
+      textColor: [
+        255,
+        255,
+        255
+      ],
+
+      fontStyle:
+        "bold",
+
+      halign:
+        "center",
+
+      fontSize:
+        8
+
+    },
+
+    alternateRowStyles: {
+
+      fillColor: [
+        255,
+        249,
+        241
+      ]
+
+    },
+
+    columnStyles: {
+
+      0: {
+        cellWidth: 12,
+        halign: "center"
+      },
+
+      1: {
+        cellWidth: 76
+      },
+
+      2: {
+        cellWidth: 16,
+        halign: "center"
+      },
+
+      3: {
+        cellWidth: 26,
+        halign: "right"
+      },
+
+      4: {
+        cellWidth: 25,
+        halign: "center"
+      },
+
+      5: {
+        cellWidth: 30,
+        halign: "right"
+      }
+
+    },
+
+    didDrawPage:
+      function(data) {
+
+        const pageNumber =
+          doc.internal.getNumberOfPages();
+
+
+        drawPDFHeader(
+          doc,
+          pageNumber
+        );
+
+
+        drawPDFFooter(
+          doc
+        );
+
+      }
+
+  });
+
+
+  /* ================================
+     SUMMARY
+  ================================= */
+
+  let finalY =
+    doc.lastAutoTable.finalY + 8;
+
+
+  if (
+    finalY >
+    pageHeight - 100
+  ) {
+
+    doc.addPage();
+
+    const pageNumber =
+      doc.internal.getNumberOfPages();
+
+
+    drawPDFHeader(
+      doc,
+      pageNumber
+    );
+
+
+    drawPDFFooter(
+      doc
+    );
+
+
+    finalY = 55;
+
+  }
+
+
+  const totalMRP =
+    getCartMRPTotal();
+
+
+  const totalAmount =
+    getCartTotal();
+
+
+  const totalDiscount =
+    totalMRP -
+    totalAmount;
+
+
+  /* ================================
+     SUMMARY BOX
+  ================================= */
+
+  const boxX =
+    pageWidth - 95;
+
+
+  const boxWidth =
+    80;
+
+
+  doc.setFillColor(
+    255,
+    245,
+    229
+  );
+
+
+  doc.roundedRect(
+    boxX,
+    finalY,
+    boxWidth,
+    38,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    9
+  );
+
+
+  doc.setTextColor(
+    60,
+    40,
+    30
+  );
+
+
+  doc.text(
+    "TOTAL MRP",
+    boxX + 6,
+    finalY + 9
+  );
+
+
+  doc.text(
+    "Rs." +
+      money(totalMRP),
+    boxX + boxWidth - 6,
+    finalY + 9,
+    {
+      align: "right"
+    }
+  );
+
+
+  doc.text(
+    "TOTAL DISCOUNT",
+    boxX + 6,
+    finalY + 18
+  );
+
+
+  doc.text(
+    "Rs." +
+      money(totalDiscount),
+    boxX + boxWidth - 6,
+    finalY + 18,
+    {
+      align: "right"
+    }
+  );
+
+
+  /* Grand total */
+
+  doc.setFillColor(
+    170,
+    0,
+    0
+  );
+
+
+  doc.roundedRect(
+    boxX,
+    finalY + 22,
+    boxWidth,
+    16,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  doc.setFontSize(
+    10
+  );
+
+
+  doc.text(
+    "GRAND TOTAL",
+    boxX + 6,
+    finalY + 32
+  );
+
+
+  doc.setFontSize(
+    12
+  );
+
+
+  doc.text(
+    "Rs." +
+      money(totalAmount),
+    boxX + boxWidth - 6,
+    finalY + 32,
+    {
+      align: "right"
+    }
+  );
+
+
+  /* ================================
+     CUSTOMER DETAILS BELOW RECEIPT
+  ================================= */
+
+  let customerY =
+    finalY + 48;
+
+
+  if (
+    customerY >
+    pageHeight - 75
+  ) {
+
+    doc.addPage();
+
+    const pageNumber =
+      doc.internal.getNumberOfPages();
+
+
+    drawPDFHeader(
+      doc,
+      pageNumber
+    );
+
+
+    drawPDFFooter(
+      doc
+    );
+
+
+    customerY = 55;
+
+  }
+
+
+  /* Customer box */
+
+  doc.setFillColor(
+    255,
+    248,
+    239
+  );
+
+
+  doc.roundedRect(
+    15,
+    customerY,
+    82,
+    48,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.setFillColor(
+    175,
+    0,
+    0
+  );
+
+
+  doc.roundedRect(
+    15,
+    customerY,
+    82,
+    10,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.rect(
+    15,
+    customerY + 6,
+    82,
+    4,
+    "F"
+  );
+
+
+  doc.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    9
+  );
+
+
+  doc.text(
+    "CUSTOMER DETAILS",
+    21,
+    customerY + 7
+  );
+
+
+  doc.setTextColor(
+    45,
+    30,
+    20
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  doc.text(
+    "Name",
+    21,
+    customerY + 19
+  );
+
+
+  doc.text(
+    ": " +
+      customerName,
+    39,
+    customerY + 19
+  );
+
+
+  doc.text(
+    "Mobile",
+    21,
+    customerY + 29
+  );
+
+
+  doc.text(
+    ": " +
+      customerPhone,
+    39,
+    customerY + 29
+  );
+
+
+  /* Delivery address box */
+
+  doc.setFillColor(
+    255,
+    248,
+    239
+  );
+
+
+  doc.roundedRect(
+    105,
+    customerY,
+    pageWidth - 120,
+    48,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.setFillColor(
+    235,
+    91,
+    4
+  );
+
+
+  doc.roundedRect(
+    105,
+    customerY,
+    pageWidth - 120,
+    10,
+    4,
+    4,
+    "F"
+  );
+
+
+  doc.rect(
+    105,
+    customerY + 6,
+    pageWidth - 120,
+    4,
+    "F"
+  );
+
+
+  doc.setTextColor(
+    255,
+    255,
+    255
+  );
+
+
+  doc.setFontSize(
+    9
+  );
+
+
+  doc.text(
+    "DELIVERY ADDRESS",
+    111,
+    customerY + 7
+  );
+
+
+  doc.setTextColor(
+    45,
+    30,
+    20
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  const addressLines =
+    doc.splitTextToSize(
+      deliveryAddress,
+      pageWidth - 132
+    );
+
+
+  doc.text(
+    addressLines,
+    111,
+    customerY + 20
+  );
+
+
+  /* ================================
+     THANK YOU BOX
+  ================================= */
+
+  const thankY =
+    customerY + 55;
+
+
+  doc.setFillColor(
+    255,
+    248,
+    239
+  );
+
+
+  doc.roundedRect(
+    15,
+    thankY,
+    pageWidth - 30,
+    27,
+    5,
+    5,
+    "F"
+  );
+
+
+  doc.setTextColor(
+    175,
+    0,
+    0
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "bold"
+  );
+
+
+  doc.setFontSize(
+    13
+  );
+
+
+  doc.text(
+    "THANK YOU FOR YOUR ORDER",
+    pageWidth / 2,
+    thankY + 11,
+    {
+      align: "center"
+    }
+  );
+
+
+  doc.setFont(
+    "helvetica",
+    "normal"
+  );
+
+
+  doc.setFontSize(
+    8
+  );
+
+
+  doc.setTextColor(
+    80,
+    60,
+    45
+  );
+
+
+  doc.text(
+    "NIZHAL CRACKERS - Quality Products - Safe Packaging",
+    pageWidth / 2,
+    thankY + 19,
+    {
+      align: "center"
+    }
+  );
+
+
+  /* ================================
+     SAVE
+  ================================= */
+
+  const fileName =
+    "Nizhal_Crackers_Order_" +
+    orderId +
+    ".pdf";
+
+
+  if (saveFile) {
+
+    doc.save(
+      fileName
+    );
+
+  }
+
+
+  return {
+
+    doc,
+
+    items,
+
+    totalMRP,
+
+    totalDiscount,
+
+    totalAmount,
+
+    customerName,
+
+    customerPhone,
+
+    deliveryAddress,
+
+    orderId,
+
+    fileName
+
+  };
+
+}
+
+
+/* =====================================================
+   CONVERT PDF TO BASE64
+===================================================== */
+
+async function pdfToBase64(
+  blob
+) {
+
+  const buffer =
+    await blob.arrayBuffer();
+
+
+  const bytes =
+    new Uint8Array(
+      buffer
+    );
+
+
+  let binary = "";
+
+
+  const chunkSize =
+    0x8000;
+
+
+  for (
+    let i = 0;
+    i < bytes.length;
+    i += chunkSize
+  ) {
+
+    const chunk =
+      bytes.subarray(
+        i,
+        Math.min(
+          i + chunkSize,
+          bytes.length
+        )
+      );
+
+
+    binary +=
+      String.fromCharCode(
+        ...chunk
+      );
+
+  }
+
+
+  return btoa(
+    binary
+  );
+
+}
+
+
+/* =====================================================
+   SUBMIT ORDER
+===================================================== */
+
+async function submitOrder() {
+
+  const name =
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value
+      .trim();
+
+
+  const phone =
+    document
+      .getElementById(
+        "customerPhone"
+      )
+      .value
+      .trim();
+
+
+  if (!name) {
+
+    alert(
+      "Please enter customer name."
+    );
+
+    return;
+
+  }
+
+
+  if (!phone) {
+
+    alert(
+      "Please enter mobile number."
+    );
+
+    return;
+
+  }
+
+
+  const items =
+    getCartItems();
+
+
+  if (!items.length) {
+
+    alert(
+      "Please add products to the cart."
+    );
+
+    return;
+
+  }
+
+
+  const submitButton =
+    document.getElementById(
+      "submitButton"
+    );
+
+
+  const oldText =
+    submitButton.textContent;
+
+
+  submitButton.disabled =
+    true;
+
+
+  submitButton.textContent =
+    "Uploading PDF...";
+
+
+  try {
+
+    /* Create PDF without browser download */
+
+    const receipt =
+      makePDF(false);
+
+
+    if (!receipt) {
+
+      throw new Error(
+        "PDF could not be created."
+      );
+
+    }
+
+
+    const blob =
+      receipt.doc.output(
+        "blob"
+      );
+
+
+    const pdfBase64 =
+      await pdfToBase64(
+        blob
+      );
+
+
+    /* Upload through local Node server */
+
+    const response =
+      await fetch(
+        "/api/upload-pdf",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              pdfBase64,
+
+              fileName:
+                receipt.fileName
+
+            })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "PDF upload failed."
+      );
+
+    }
+
+
+    if (!data.ok) {
+
+      throw new Error(
+        data.error ||
+        "Google Drive upload failed."
+      );
+
+    }
+
+
+    /* ================================
+       WHATSAPP MESSAGE
+    ================================= */
+
+    const message = [];
+
+
+    message.push(
+      "*NIZHAL CRACKERS ORDER*"
+    );
+
+
+    message.push(
+      ""
+    );
+
+
+    receipt.items
+      .forEach(
+        (
+          item,
+          index
+        ) => {
+
+          const amount =
+            item.product.price *
+            item.quantity;
+
+
+          message.push(
+            `${index + 1}. ${item.product.name} x ${item.quantity} = Rs.${amount.toFixed(2)}`
+          );
+
+        }
+      );
+
+
+    message.push(
+      ""
+    );
+
+
+    message.push(
+      `*TOTAL = Rs.${receipt.totalAmount.toFixed(2)}*`
+    );
+
+
+    message.push(
+      ""
+    );
+
+
+    message.push(
+      `Customer: ${receipt.customerName}`
+    );
+
+
+    message.push(
+      `Mobile: ${receipt.customerPhone}`
+    );
+
+
+    message.push(
+      `Delivery Address: ${receipt.deliveryAddress}`
+    );
+
+
+    message.push(
+      ""
+    );
+
+
+    message.push(
+      "*Order PDF:*"
+    );
+
+
+    if (data.viewUrl) {
+
+      message.push(
+        data.viewUrl
+      );
+
+    }
+
+
+    const whatsappUrl =
+      "https://wa.me/" +
+      WHATSAPP_NUMBER +
+      "?text=" +
+      encodeURIComponent(
+        message.join("\n")
+      );
+
+
+    window.open(
+      whatsappUrl,
+      "_blank"
+    );
+
+
+    alert(
+      "Order completed successfully.\n\nPDF uploaded to Google Drive."
+    );
+
+
+  }
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    alert(
+      "PDF upload failed.\n\n" +
+      error.message
+    );
+
+  }
+  finally {
+
+    submitButton.disabled =
+      false;
+
+
+    submitButton.textContent =
+      oldText;
+
+  }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
