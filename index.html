@@ -584,6 +584,222 @@ const GOOGLE_APPS_SCRIPT_URL =
 
 
 /* =====================================================
+   TAMIL PRODUCT NAMES
+   Original Google Sheet names are kept unchanged.
+===================================================== */
+
+const TAMIL_PRODUCT_NAMES =
+{
+  "3/4” Kuruvi": "3/4” குருவி",
+  "3 1/2” Lakshmi/parrot/spidermen": "3 1/2” லட்சுமி/கிளி/ஸ்பைடர்மேன்",
+  "3 1/2” Lakshmi Machine Fuse": "3 1/2” லட்சுமி மெஷின் ஃபியூஸ்",
+  "4” lakshmi/ben10": "4” லட்சுமி/பென் 10",
+  "4” Gold Lakshmi": "4” கோல்டு லட்சுமி",
+  "4” Bahubali/Kumki": "4” பாகுபலி/கும்கி",
+  "5” Kumki/Corilla/Bahubali/Lion": "5” கும்கி/கொரில்லா/பாகுபலி/லயன்",
+  "6” Kumki/Lion King": "6” கும்கி/லயன் கிங்",
+  "28 Chorsa Super": "28 சோர்சா சூப்பர்",
+  "28 Giant Super": "28 ஜெயன்ட் சூப்பர்",
+  "56 Gaint Super": "56 ஜெயன்ட் சூப்பர்",
+  "24 DELUX": "24 டீலக்ஸ்",
+  "50 DELUX": "50 டீலக்ஸ்",
+  "100 DELUX": "100 டீலக்ஸ்",
+  "Adiyal Dlx (1/4 Kg)": "அடியால் டீலக்ஸ் (1/4 கிலோ)",
+  "Adiyal Dlx (1/2 Kg)": "அடியால் டீலக்ஸ் (1/2 கிலோ)",
+  "Adiyal Heavy (1Kg)": "அடியால் ஹெவி (1கிலோ)",
+  "100 Gram Adiyal": "100 கிராம் அடியால்",
+  "Funnel Bomb/Hydro Bomb": "ஃபன்னல் பாம்/ஹைட்ரோ பாம்",
+  "Marshal Bomb": "மார்ஷல் பாம்",
+  "Dinosaur Bomb": "டைனோசர் பாம்",
+  "Sindoor Bomb": "சிந்தூர் பாம்",
+  "Flower Pots Big": "பெரிய பூச்சட்டி",
+  "Flower Pots Special": "ஸ்பெஷல் பூச்சட்டி",
+  "Flower Pots Asoka": "அசோகா பூச்சட்டி",
+  "Flower Pots Colour Kotti": "கலர் கொட்டி பூச்சட்டி",
+  "Flower Pots Delux (5pcs)": "டீலக்ஸ் பூச்சட்டி (5 பீஸ்கள்)",
+  "Flower Pots Super Delux(2pcs)": "சூப்பர் டீலக்ஸ் பூச்சட்டி (2 பீஸ்கள்)",
+  "Colour Kotti Gold Delex": "கலர் கொட்டி கோல்டு டீலக்ஸ்",
+  "Ground Chakkers Big": "பெரிய தரைச்சக்கரம்",
+  "Ground Chakkers Special": "ஸ்பெஷல் தரைச்சக்கரம்",
+  "Ground Chakkers Deluxe": "டீலக்ஸ் தரைச்சக்கரம்",
+  "G. Chakkar Spinner Deluxe": "தரைச்சக்கர ஸ்பின்னர் டீலக்ஸ்",
+  "G. C Spinner Super Deluxe": "தரைச்சக்கர ஸ்பின்னர் சூப்பர் டீலக்ஸ்",
+  "Cocktail Spinner (Ayyan’s)": "காக்டெய்ல் ஸ்பின்னர் (அய்யன்ஸ்)",
+  "Ninja Chakkar (Ayyan’s)": "நிஞ்ஜா சக்கரம் (அய்யன்ஸ்)",
+  "Wire chakkar(in hand)": "வயர் சக்கரம்(கையில்)",
+  "Lotus Wheel (Ayyan’s)/4*4": "தாமரை சக்கரம் (அய்யன்ஸ்)/4*4",
+  "Rio Wheel (Ayyan’s)": "ரியோ சக்கரம் (அய்யன்ஸ்)",
+  "Tinto Wheel (Ayyan’s)": "டின்டோ சக்கரம் (அய்யன்ஸ்)",
+  "Whistling Dixie (Vadivel)": "விசில் டிக்ஸி (வடிவேல்)",
+  "1 1/2” Twinkling Star": "1 1/2” ட்விங்கிளிங் ஸ்டார்",
+  "4” Twinkling Star Deluxe": "4” ட்விங்கிளிங் ஸ்டார் டீலக்ஸ்",
+  "Deluxatches": "டீலக்ஸ் தீப்பெட்டி",
+  "Super Delux Matches": "சூப்பர் டீலக்ஸ் தீப்பெட்டி",
+  "100 Lights": "100 லைட்ஸ்",
+  "200 Lights": "200 லைட்ஸ்",
+  "1K Lights": "1K லைட்ஸ்",
+  "2K Lights": "2K லைட்ஸ்",
+  "5K Lights": "5K லைட்ஸ்",
+  "10K Lights": "10K லைட்ஸ்",
+  "Digital Wala": "டிஜிட்டல் வாலா",
+  "Rocket Bomb": "ராக்கெட் பாம்",
+  "Whistling Rocket": "விசில் ராக்கெட்",
+  "Lunik Rocket": "லூனிக் ராக்கெட்",
+  "Siver Ultra Pencil": "சில்வர் அல்ட்ரா பென்சில்",
+  "Selfie Stick": "செல்ஃபி ஸ்டிக்",
+  "Sea Laser": "சீ லேசர்",
+  "Green Laser": "கிரீன் லேசர்",
+  "Colour Smoke": "கலர் ஸ்மோக்",
+  "Golden Rain": "கோல்டன் ரெயின்",
+  "Star Rain": "ஸ்டார் ரெயின்",
+  "PeaCock Feacher": "மயில் ஃபெதர்",
+  "Mini Colour Fountain": "மினி கலர் ஃபவுண்டன்",
+  "Choco Delight": "சாக்லேட் டிலைட்",
+  "Tri color(SHIN CHAN)": "மூன்று வண்ண(ஷின் சான்)",
+  "Power Rangers/Rangers colour": "பவர் ரேஞ்சர்ஸ்/ரேஞ்சர்ஸ் கலர்",
+  "Photo Flash": "போட்டோ ஃபிளாஷ்",
+  "Magical Butterfly": "மேஜிக்கல் பட்டாம்பூச்சி",
+  "Helicopter Tri colour": "ஹெலிகாப்டர் மூன்று வண்ண",
+  "Drone": "ட்ரோன்",
+  "Siren": "சைரன்",
+  "Lemon Tree Purple/Yellow": "லெமன் ட்ரீ பர்பிள்/மஞ்சள்",
+  "Lemon Tree Silver/Amber": "லெமன் ட்ரீ சில்வர்/ஆம்பர்",
+  "Wonder Mix/Twix": "வொண்டர் மிக்ஸ்/ட்விக்ஸ்",
+  "Pancharanga": "பஞ்சரங்கா",
+  "Seetha Geetha": "சீதா கீதா",
+  "TIN BEER": "டின் பீர்",
+  "6” Double Decker 2in1": "6” டபுள் டெக்கர் 2in1",
+  "8”Trible Monkey 3in1": "8”டிரிபிள் மங்கி 3in1",
+  "Water Falls": "நீர்வீழ்ச்சி",
+  "Old Munk": "ஓல்ட் மங்க்",
+  "Tri Colour Fountain": "மூன்று வண்ண ஃபவுண்டன்",
+  "Emu Fire Egg": "ஈமு ஃபயர் எக்",
+  "Mobile Phone Shower": "மொபைல் போன் ஷவர்",
+  "I Cone Fountain": "ஐ கோன் ஃபவுண்டன்",
+  "Cocktail Fountain": "காக்டெய்ல் ஃபவுண்டன்",
+  "Top Gun/Shooting Club": "டாப் கன்/ஷூட்டிங் கிளப்",
+  "Lollypop Crackling": "லாலிபாப் கிராக்கிளிங்",
+  "Tower Pots": "டவர் பாட்ஸ்",
+  "White House": "வைட் ஹவுஸ்",
+  "Apple Juice": "ஆப்பிள் ஜூஸ்",
+  "Guava Fruit": "கொய்யா பழம்",
+  "Dragon Fruit": "டிராகன் பழம்",
+  "Lemon Ice": "லெமன் ஐஸ்",
+  "Water Melon": "தர்பூசணி",
+  "Little Hearts": "லிட்டில் ஹார்ட்ஸ்",
+  "Serpent": "சர்ப்பம்",
+  "Bijili(100Pcs)": "பிஜிலி(100பீஸ்கள்)",
+  "Gold Bijili(100Pcs)": "கோல்டு பிஜிலி(100பீஸ்கள்)",
+  "Peacock Multicolour": "மயில் பல வண்ண",
+  "2in1 Bada Peacock": "2 இன் 1 பெரிய மயில்",
+  "Belly Dance Peacock Red": "பெல்லி டான்ஸ் மயில் ரெட்",
+  "Belly Dance Peacock Silver": "பெல்லி டான்ஸ் மயில் சில்வர்",
+  "Belly Dance Peacock Green": "பெல்லி டான்ஸ் மயில் கிரீன்",
+  "Belly Dance Peacock Gold": "பெல்லி டான்ஸ் மயில் கோல்டு",
+  "Tom and Jerry Red": "டாம் அண்ட் ஜெர்ரி ரெட்",
+  "Tom and Jerry Green": "டாம் அண்ட் ஜெர்ரி கிரீன்",
+  "Tom and Jerry White": "டாம் அண்ட் ஜெர்ரி வைட்",
+  "Tom and Jerry Gold": "டாம் அண்ட் ஜெர்ரி கோல்டு",
+  "Tom and Jerry R &G": "டாம் அண்ட் ஜெர்ரி ரெட் & கிரீன்",
+  "Googly Red": "கூக்லி ரெட்",
+  "Googly Green": "கூக்லி கிரீன்",
+  "Googly Silver": "கூக்லி சில்வர்",
+  "Googly Gold": "கூக்லி கோல்டு",
+  "Googly Red & Green": "கூக்லி ரெட் & கிரீன்",
+  "Scooby-Doo Red": "ஸ்கூபி டூ ரெட்",
+  "Scooby-Doo Green": "ஸ்கூபி டூ கிரீன்",
+  "Scooby-Doo Silver": "ஸ்கூபி டூ சில்வர்",
+  "Scooby-Doo Gold": "ஸ்கூபி டூ கோல்டு",
+  "Scooby-Doo Red & Green": "ஸ்கூபி டூ ரெட் & கிரீன்",
+  "Easter": "ஈஸ்டர்",
+  "Snow Balls": "ஸ்னோ பால்ஸ்",
+  "X-mas": "கிறிஸ்துமஸ்",
+  "Ice Balls": "ஐஸ் பால்ஸ்",
+  "Santa Claus": "சாண்டா கிளாஸ்",
+  "Rain & Shin": "ரெயின் அண்ட் ஷைன்",
+  "Timmy & Tommy": "டிம்மி அண்ட் டாமி",
+  "Dolu & Bolu": "டோலு அண்ட் போலு",
+  "Jubbly & Bubbly": "ஜப்ளி அண்ட் பப்ளி",
+  "Santa claus": "சாண்டா கிளாஸ்",
+  "Magic Light": "மேஜிக் லைட்",
+  "Fire Light": "ஃபயர் லைட்",
+  "Water Light": "வாட்டர் லைட்",
+  "Hi Light": "ஹை லைட்",
+  "Kulfi": "குல்ஃபி",
+  "Casata": "கசாட்டா",
+  "Vennila": "வெனிலா",
+  "Strawberry": "ஸ்ட்ராபெரி",
+  "Ak-47 Gun (with 5pkt Bullet)": "ஏகே-47 கன் (5 பாக்கெட் புல்லட்டுடன்)",
+  "Hi-PowerGun (with 5pkt Bullet)": "ஹை பவர் கன் (5 பாக்கெட் புல்லட்டுடன்)",
+  "Ring Cap for above Guns": "மேலுள்ள கன்களுக்கு ரிங் கேப்",
+  "1” Chotta Pipe": "1” சோட்டா பைப்",
+  "7 Shot": "7 ஷாட்",
+  "Penta Pro shy shot": "பென்டா ப்ரோ ஷை ஷாட்",
+  "2” Single Pipe": "2” சிங்கிள் பைப்",
+  "2” ComboPack Pipe (3 Pcs)": "2” காம்போ பேக் பைப் (3 பீஸ்கள்)",
+  "Ayyan’s Voilet": "அய்யன்ஸ் வயலெட்",
+  "Ayyan’s Pink": "அய்யன்ஸ் பிங்க்",
+  "2 1/2” Facny Pipe(2 Pcs)": "2 1/2” ஃபேன்சி பைப்(2 பீஸ்கள்)",
+  "2 1/2” Facny Pipe(3 Pcs)": "2 1/2” ஃபேன்சி பைப்(3 பீஸ்கள்)",
+  "2 ½” Dancing Shooter/3Step": "2 ½” டான்சிங் ஷூட்டர்/3 ஸ்டெப்",
+  "3 1/2”Pipe(Trible Ball) (2 Pcs)": "3 1/2”பைப்(டிரிபிள் பால்) (2 பீஸ்கள்)",
+  "3 1/2”Pipe": "3 1/2”பைப்",
+  "3 1/2”Pipe (Double Ball)": "3 1/2”பைப் (டபுள் பால்)",
+  "Crystal": "கிரிஸ்டல்",
+  "Shine": "ஷைன்",
+  "Solitare": "சாலிடேர்",
+  "Style": "ஸ்டைல்",
+  "Flaunt": "ஃப்ளாண்ட்",
+  "Glorious": "க்ளோரியஸ்",
+  "Frost": "ஃப்ராஸ்ட்",
+  "Nayagara Falls": "நயாகரா நீர்வீழ்ச்சி",
+  "4” Single Pipe": "4” சிங்கிள் பைப்",
+  "4” Fancy Pipe(2 Pcs)": "4” ஃபேன்சி பைப் (2 பீஸ்கள்)",
+  "5” Single Pipe": "5” சிங்கிள் பைப்",
+  "12 Shot Raider": "12 ஷாட் ரைடர்",
+  "12 Shot (Multi Colour)": "12 ஷாட் (பல வண்ண)",
+  "15 Shot (Multi Colour)": "15 ஷாட் (பல வண்ண)",
+  "30 Shot (Multi Colour)": "30 ஷாட் (பல வண்ண)",
+  "60 Shot (Multi Colour)": "60 ஷாட் (பல வண்ண)",
+  "120 Shot (Multi Colour)": "120 ஷாட் (பல வண்ண)",
+  "240 Shot (Multi Colour)": "240 ஷாட் (பல வண்ண)",
+  "10 kurkure Smokeshot": "10 குர்குரே ஸ்மோக் ஷாட்",
+  "10 Cm Electric Sparklers": "10 செ.மீ. எலக்ட்ரிக் ஸ்பார்க்லர்ஸ்",
+  "10 Cm Colour Sparklers": "10 செ.மீ. கலர் ஸ்பார்க்லர்ஸ்",
+  "10 Cm Green Sparklers": "10 செ.மீ. கிரீன் ஸ்பார்க்லர்ஸ்",
+  "10 Cm Red Sparklers": "10 செ.மீ. ரெட் ஸ்பார்க்லர்ஸ்",
+  "12 Cm Electric Sparklers": "12 செ.மீ. எலக்ட்ரிக் ஸ்பார்க்லர்ஸ்",
+  "12 Cm Colour Sparklers": "12 செ.மீ. கலர் ஸ்பார்க்லர்ஸ்",
+  "12 Cm Green Sparklers": "12 செ.மீ. கிரீன் ஸ்பார்க்லர்ஸ்",
+  "12 Cm Red Sparklers": "12 செ.மீ. ரெட் ஸ்பார்க்லர்ஸ்",
+  "15 Cm Electric Sparklers": "15 செ.மீ. எலக்ட்ரிக் ஸ்பார்க்லர்ஸ்",
+  "15 Cm Colour Sparklers": "15 செ.மீ. கலர் ஸ்பார்க்லர்ஸ்",
+  "15 Cm Green Sparklers": "15 செ.மீ. கிரீன் ஸ்பார்க்லர்ஸ்",
+  "15 Cm Red Sparklers": "15 செ.மீ. ரெட் ஸ்பார்க்லர்ஸ்",
+  "30 Cm Electric Sparklers": "30 செ.மீ. எலக்ட்ரிக் ஸ்பார்க்லர்ஸ்",
+  "30 Cm Colour Sparklers": "30 செ.மீ. கலர் ஸ்பார்க்லர்ஸ்",
+  "30 Cm Green Sparklers": "30 செ.மீ. கிரீன் ஸ்பார்க்லர்ஸ்",
+  "30 Cm Red Sparklers": "30 செ.மீ. ரெட் ஸ்பார்க்லர்ஸ்",
+  "50 Cm Electric Sparklers": "50 செ.மீ. எலக்ட்ரிக் ஸ்பார்க்லர்ஸ்",
+  "50 Cm Colour Sparklers": "50 செ.மீ. கலர் ஸ்பார்க்லர்ஸ்",
+  "21 Items Gift Box": "21 ஐட்டம் கிஃப்ட் பாக்ஸ்",
+  "31 Items Gift Box": "31 ஐட்டம் கிஃப்ட் பாக்ஸ்",
+  "41 Items Gift Box": "41 ஐட்டம் கிஃப்ட் பாக்ஸ்",
+  "51 Items Gift Box": "51 ஐட்டம் கிஃப்ட் பாக்ஸ்"
+};
+
+function getDisplayProductName(product) {
+  const originalName =
+    String(product.name || "").trim();
+
+  return (
+    TAMIL_PRODUCT_NAMES[originalName] ||
+    originalName
+  );
+}
+
+
+/* =====================================================
    PRODUCTS
 ===================================================== */
 
@@ -593,11 +809,14 @@ let products = [];
    PRODUCT IMAGE PATH - ADDED
 ===================================================== */
 
-function getProductImage(product) {
+const PRODUCT_IMAGES = {
+  // Product images: products/01.png ... products/197.png
+};
 
-  const sno = Number(
-    product.sno || product.id || 1
-  );
+function getProductImage(product) {
+  const sno = Number(product.sno || product.id || 0);
+
+  if (!sno || sno < 1 || sno > 197) return "";
 
   const number =
     sno < 100
@@ -605,7 +824,6 @@ function getProductImage(product) {
       : String(sno);
 
   return `products/${number}.png`;
-
 }
 
 let cart =
@@ -847,6 +1065,9 @@ function renderProducts() {
         !search ||
         product.name
           .toLowerCase()
+          .includes(search) ||
+        getDisplayProductName(product)
+          .toLowerCase()
           .includes(search);
 
 
@@ -893,19 +1114,20 @@ function renderProducts() {
               ${escapeHTML(discountText)}
             </span>
 
-            <!-- PRODUCT IMAGE - ADDED -->
-            <div class="product-image-box">
-              <img
-                src="${getProductImage(product)}"
-                alt="${escapeHTML(product.name)}"
-                class="product-image"
-                loading="lazy"
-                onerror="this.style.display='none'"
-              >
-            </div>
+            ${getProductImage(product) ? `
+              <div class="product-image-box">
+                <img
+                  src="${getProductImage(product)}"
+                  alt="${escapeHTML(getDisplayProductName(product))}"
+                  class="product-image"
+                  loading="lazy"
+                  onerror="this.closest('.product-image-box').style.display='none'"
+                >
+              </div>
+            ` : ""}
 
             <div class="product-name">
-              ${escapeHTML(product.name)}
+              ${escapeHTML(getDisplayProductName(product))}
             </div>
 
             <div class="product-unit">
@@ -1192,7 +1414,7 @@ function updateCart() {
           <div class="cart-item">
 
             <div class="cart-name">
-              ${escapeHTML(p.name)}
+              ${escapeHTML(getDisplayProductName(p))}
             </div>
 
             <div class="cart-info">
@@ -1897,7 +2119,7 @@ function makePDF(
             index + 1
           ),
 
-          p.name,
+          getDisplayProductName(p),
 
           String(
             qty
@@ -2869,7 +3091,7 @@ async function submitOrder() {
 
 
           message.push(
-            `${index + 1}. ${item.product.name} x ${item.quantity} = Rs.${amount.toFixed(2)}`
+            `${index + 1}. ${getDisplayProductName(item.product)} x ${item.quantity} = Rs.${amount.toFixed(2)}`
           );
 
         }
