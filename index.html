@@ -595,15 +595,20 @@ let products = [];
 
 function getProductImage(product) {
 
-  const number =
-    String(
-      Number(
-        product.sno || product.id || 1
-      )
-    ).padStart(3, "0");
+  const productName =
+    String(product.name || "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
 
-  return `/${number}.png`;
+  if (
+    Number(product.sno) === 1 ||
+    productName.includes("kuruvi")
+  ) {
+    return encodeURI("3 4 Kuruvi.png");
+  }
 
+  return "";
 }
 
 let cart =
@@ -891,16 +896,17 @@ function renderProducts() {
               ${escapeHTML(discountText)}
             </span>
 
-            <!-- PRODUCT IMAGE - ADDED -->
-            <div class="product-image-box">
-              <img
-                src="${getProductImage(product)}"
-                alt="${escapeHTML(product.name)}"
-                class="product-image"
-                loading="lazy"
-                onerror="this.style.display='none'"
-              >
-            </div>
+            ${getProductImage(product) ? `
+              <div class="product-image-box">
+                <img
+                  src="${getProductImage(product)}"
+                  alt="${escapeHTML(product.name)}"
+                  class="product-image"
+                  loading="lazy"
+                  onerror="this.closest('.product-image-box').style.display='none'"
+                >
+              </div>
+            ` : ""}
 
             <div class="product-name">
               ${escapeHTML(product.name)}
