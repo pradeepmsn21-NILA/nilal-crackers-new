@@ -3160,6 +3160,17 @@ async function submitOrder() {
       whatsappUrl,
       "_blank"
     );
+    /* ================================
+   CLEAR CART AFTER SUCCESSFUL ORDER
+================================ */
+
+cart = {};
+
+saveCart();
+
+updateCart();
+
+closeCart();
 
 
     alert(
