@@ -583,6 +583,14 @@ const GOOGLE_APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzvlgXHs8HMW-6vnsD3OFyKJ2u-c2wFECmaYz7jVygXum_4P2UZA_2VtBBXzuH266hWoA/exec";
 
 
+/* =====================================================
+   DISPLAY PRODUCT NAME
+===================================================== */
+
+function getDisplayProductName(product) {
+  return String(product?.name || "").trim();
+}
+
 
 /* =====================================================
    PRODUCTS
@@ -594,11 +602,8 @@ let products = [];
    PRODUCT IMAGE PATH - ADDED
 ===================================================== */
 
-const PRODUCT_IMAGES = {
-  // Product images: products/01.png ... products/197.png
-};
-
 function getProductImage(product) {
+
   const sno = Number(product.sno || product.id || 0);
 
   if (!sno || sno < 1 || sno > 197) return "";
@@ -609,6 +614,7 @@ function getProductImage(product) {
       : String(sno);
 
   return `products/${number}.png`;
+
 }
 
 let cart =
@@ -899,17 +905,16 @@ function renderProducts() {
               ${escapeHTML(discountText)}
             </span>
 
-            ${getProductImage(product) ? `
-              <div class="product-image-box">
-                <img
-                  src="${getProductImage(product)}"
-                  alt="${escapeHTML(getDisplayProductName(product))}"
-                  class="product-image"
-                  loading="lazy"
-                  onerror="this.closest('.product-image-box').style.display='none'"
-                >
-              </div>
-            ` : ""}
+            <!-- PRODUCT IMAGE - ADDED -->
+            <div class="product-image-box">
+              <img
+                src="${getProductImage(product)}"
+                alt="${escapeHTML(getDisplayProductName(product))}"
+                class="product-image"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              >
+            </div>
 
             <div class="product-name">
               ${escapeHTML(getDisplayProductName(product))}
@@ -1199,7 +1204,7 @@ function updateCart() {
           <div class="cart-item">
 
             <div class="cart-name">
-              ${escapeHTML(getDisplayProductName(p))}
+              ${escapeHTML(p.name)}
             </div>
 
             <div class="cart-info">
@@ -1904,7 +1909,7 @@ function makePDF(
             index + 1
           ),
 
-          getDisplayProductName(p),
+          p.name,
 
           String(
             qty
@@ -2876,7 +2881,7 @@ async function submitOrder() {
 
 
           message.push(
-            `${index + 1}. ${getDisplayProductName(item.product)} x ${item.quantity} = Rs.${amount.toFixed(2)}`
+            `${index + 1}. ${item.product.name} x ${item.quantity} = Rs.${amount.toFixed(2)}`
           );
 
         }
@@ -2945,17 +2950,19 @@ async function submitOrder() {
       whatsappUrl,
       "_blank"
     );
+
+
     /* ================================
-   CLEAR CART AFTER SUCCESSFUL ORDER
-================================ */
+       CLEAR CART AFTER SUCCESSFUL ORDER
+    ================================= */
 
-cart = {};
+    cart = {};
 
-saveCart();
+    saveCart();
 
-updateCart();
+    updateCart();
 
-closeCart();
+    closeCart();
 
 
     alert(
