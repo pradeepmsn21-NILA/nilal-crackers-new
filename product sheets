@@ -1,0 +1,279 @@
+/* =====================================================
+   HELPER: GET DISPLAY PRODUCT NAME (TAMIL / ENGLISH)
+===================================================== */
+function getDisplayProductName(product) {
+  if (!product) return "";
+  const snoStr = String(product.sno || product.id || "").padStart(2, "0");
+  const tamilName = product.tamil_name || product.tamilName || product.name_ta;
+  const englishName = product.name || product.english_name || product.englishName || "";
+  
+  if (tamilName) {
+    return `${snoStr}. ${tamilName} / ${englishName}`;
+  }
+  return `${snoStr}. ${englishName}`;
+}
+
+/* =====================================================
+   MAKE PROFESSIONAL PDF (COMPLETED)
+===================================================== */
+function makePDF(saveFile = false) {
+  if (typeof window.jspdf === "undefined") {
+    alert("PDF library is not loaded. Please refresh the page.");
+    return null;
+  }
+
+  const items = getCartItems();
+  if (!items.length) {
+    alert("Please add at least one product to the cart.");
+    return null;
+  }
+
+  const customerName = document.getElementById("customerName").value.trim() || "-";
+  const customerPhone = document.getElementById("customerPhone").value.trim() || "-";
+  const deliveryAddress = document.getElementById("customerAddress").value.trim() || "-";
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  /* HEADER */
+  drawPDFHeader(doc, 1);
+
+  /* RECEIPT TITLE */
+  doc.setFillColor(255, 244, 225);
+  doc.roundedRect(15, 48, pageWidth - 30, 18, 4, 4, "F");
+
+  doc.setTextColor(165, 0, 0);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(17);
+  doc.text("ORDER RECEIPT", pageWidth / 2, 60, { align: "center" });
+
+  /* ORDER INFO */
+  const orderDate = new Date();
+  const dateText = orderDate.toLocaleDateString("en-IN");
+  const orderId = "NC" + orderDate.toISOString().replace(/\D/g, "").slice(0, 14);
+
+  doc.setTextColor(60, 40, 30);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.text("ORDER ID: " + orderId, 17, 72);
+  doc.text("DATE: " + dateText, pageWidth - 17, 72, { align: "right" });
+
+  /* TABLE DATA */
+  const tableRows = items.map((item, index) => {
+    const p = item.product;
+    const qty = item.quantity;
+    const mrp = Number(p.mrp || 0);
+    const discount = Number(p.discount || 0);
+    const sellingPrice = Number(p.price || 0);
+    const amount = sellingPrice * qty;
+
+    return [
+      String(index + 1),
+      getDisplayProductName(p),
+      String(qty),
+      "Rs." + money(mrp),
+      discount + "%",
+      "Rs." + money(amount)
+    ];
+  });
+
+  /* AUTO TABLE */
+  doc.autoTable({
+    startY: 78,
+    margin: { left: 15, right: 15, bottom: 25 },
+    head: [["S.NO", "PRODUCT", "QTY", "MRP", "DISCOUNT", "TOTAL AMOUNT"]],
+    body: tableRows,
+    theme: "grid",
+    styles: {
+      font: "helvetica",
+      fontSize: 8.2,
+      cellPadding: 3,
+      lineColor: [235, 210, 185],
+      lineWidth: 0.25,
+      textColor: [35, 25, 20],
+      valign: "middle"
+    },
+    headStyles: {
+      fillColor: [175, 0, 0],
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+      halign: "center",
+      fontSize: 8
+    },
+    alternateRowStyles: {
+      fillColor: [255, 249, 241]
+    },
+    columnStyles: {
+      0: { cellWidth: 12, halign: "center" },
+      1: { cellWidth: 76 },
+      2: { cellWidth: 16, halign: "center" },
+      3: { cellWidth: 26, halign: "right" },
+      4: { cellWidth: 25, halign: "center" },
+      5: { cellWidth: 30, halign: "right" }
+    },
+    didDrawPage: function(data) {
+      const pageNumber = doc.internal.getNumberOfPages();
+      drawPDFHeader(doc, pageNumber);
+      drawPDFFooter(doc);
+    }
+  });
+
+  /* SUMMARY POSITION */
+  let finalY = doc.lastAutoTable.finalY + 8;
+
+  if (finalY > pageHeight - 100) {
+    doc.addPage();
+    const pageNumber = doc.internal.getNumberOfPages();
+    drawPDFHeader(doc, pageNumber);
+    drawPDFFooter(doc);
+    finalY = 55;
+  }
+
+  const totalMRP = getCartMRPTotal();
+  const totalAmount = getCartTotal();
+  const totalDiscount = totalMRP - totalAmount;
+
+  /* CUSTOMER DETAILS BOX */
+  const custBoxWidth = pageWidth - 140;
+  doc.setFillColor(255, 250, 243);
+  doc.setDrawColor(235, 210, 185);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(15, finalY, custBoxWidth, 38, 4, 4, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(165, 0, 0);
+  doc.text("CUSTOMER DETAILS", 20, finalY + 8);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(50, 35, 25);
+  doc.text("Name: " + customerName, 20, finalY + 16);
+  doc.text("Phone: " + customerPhone, 20, finalY + 22);
+
+  const addressLines = doc.splitTextToSize("Address: " + deliveryAddress, custBoxWidth - 10);
+  doc.text(addressLines, 20, finalY + 28);
+
+  /* SUMMARY BOX */
+  const boxX = pageWidth - 95;
+  const boxWidth = 80;
+
+  doc.setFillColor(255, 245, 229);
+  doc.roundedRect(boxX, finalY, boxWidth, 38, 4, 4, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(60, 40, 30);
+
+  doc.text("TOTAL MRP", boxX + 6, finalY + 9);
+  doc.text("Rs." + money(totalMRP), boxX + boxWidth - 6, finalY + 9, { align: "right" });
+
+  doc.text("TOTAL DISCOUNT", boxX + 6, finalY + 18);
+  doc.text("Rs." + money(totalDiscount), boxX + boxWidth - 6, finalY + 18, { align: "right" });
+
+  /* GRAND TOTAL BANNER */
+  doc.setFillColor(170, 0, 0);
+  doc.roundedRect(boxX, finalY + 22, boxWidth, 16, 4, 4, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(10);
+  doc.text("GRAND TOTAL", boxX + 6, finalY + 32);
+
+  doc.setFontSize(12);
+  doc.text("Rs." + money(totalAmount), boxX + boxWidth - 6, finalY + 32, { align: "right" });
+
+  if (saveFile) {
+    doc.save(`Receipt_${orderId}.pdf`);
+  }
+
+  return { doc, orderId, totalAmount, customerName, customerPhone, deliveryAddress };
+}
+
+/* =====================================================
+   SUBMIT ORDER & SEND TO WHATSAPP / GAS
+===================================================== */
+async function submitOrder() {
+  const submitBtn = document.getElementById("submitButton");
+  const nameInput = document.getElementById("customerName").value.trim();
+  const phoneInput = document.getElementById("customerPhone").value.trim();
+
+  if (!nameInput || !phoneInput) {
+    alert("Please enter Customer Name and Mobile Number.");
+    return;
+  }
+
+  const pdfData = makePDF(false);
+  if (!pdfData) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Processing Order...";
+
+  try {
+    const base64Pdf = pdfData.doc.output("datauristring").split(",")[1];
+
+    const payload = {
+      orderId: pdfData.orderId,
+      customerName: pdfData.customerName,
+      customerPhone: pdfData.customerPhone,
+      deliveryAddress: pdfData.deliveryAddress,
+      totalAmount: pdfData.totalAmount,
+      pdfBase64: base64Pdf,
+      items: getCartItems().map(i => ({
+        id: i.product.id,
+        name: getDisplayProductName(i.product),
+        price: i.product.price,
+        quantity: i.quantity,
+        total: i.product.price * i.quantity
+      }))
+    };
+
+    let drivePdfUrl = "";
+
+    if (GOOGLE_APPS_SCRIPT_URL) {
+      const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      const resData = await response.json();
+      if (resData.fileUrl) {
+        drivePdfUrl = resData.fileUrl;
+      }
+    }
+
+    /* WHATSAPP MESSAGE SETUP */
+    let message = `*NEW ORDER - ${COMPANY_NAME}*\n`;
+    message += `----------------------------\n`;
+    message += `*Order ID:* ${pdfData.orderId}\n`;
+    message += `*Name:* ${pdfData.customerName}\n`;
+    message += `*Phone:* ${pdfData.customerPhone}\n`;
+    message += `*Address:* ${pdfData.deliveryAddress}\n`;
+    message += `*Grand Total:* Rs.${money(pdfData.totalAmount)}\n`;
+    if (drivePdfUrl) {
+      message += `*PDF Receipt:* ${drivePdfUrl}\n`;
+    }
+    message += `----------------------------\n`;
+    message += `*Items Ordered:*\n`;
+
+    getCartItems().forEach((item, i) => {
+      message += `${i + 1}. ${getDisplayProductName(item.product)} x ${item.quantity} = Rs.${money(item.product.price * item.quantity)}\n`;
+    });
+
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, "_blank");
+
+  } catch (error) {
+    console.error(error);
+    alert("Failed to send order automatically. Downloading PDF locally instead.");
+    pdfData.doc.save(`Receipt_${pdfData.orderId}.pdf`);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit Order + PDF + WhatsApp";
+  }
+}
