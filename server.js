@@ -58,7 +58,7 @@ app.use(express.static(publicPath));
 */
 
 const GOOGLE_APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyDE3fNzjuhp9KadyW23NeoLlPxlJezJcHnPf03pIvgkA5m_CUbUlLCxnu1cwBWrtAWUA/exec";
+  "https://script.google.com/macros/s/AKfycbyj2CSePhowZmXWs0btv1ZAQiJVe8omd57GVoDUjSUMBChIZ3R8cyZdbsmafRkkpgGK_A/exec";
 const RECAPTCHA_SECRET_KEY =
   process.env.RECAPTCHA_SECRET_KEY || "";
 
