@@ -3400,11 +3400,21 @@ async function loadOrderHistory() {
             "<div class=\"history-row\"><strong>Date</strong><span>" +
               escapeHistoryHtml(order.date) +
             "</span></div>" +
+            "<div class=\"history-row\"><strong>Customer</strong><span>" +
+              escapeHistoryHtml(order.customerName) +
+            "</span></div>" +
+            "<div class=\"history-row\"><strong>Mobile</strong><span>" +
+              escapeHistoryHtml(order.phone) +
+            "</span></div>" +
+            "<div class=\"history-row\"><strong>Address</strong><span>" +
+              escapeHistoryHtml(order.address) +
+            "</span></div>" +
             "<div class=\"history-row\"><strong>Total</strong><span>Rs." +
               escapeHistoryHtml(order.total) +
             "</span></div>" +
             (itemsHtml
-              ? "<ul class=\"history-items\">" + itemsHtml + "</ul>"
+              ? "<div style=\"margin-top:10px;font-weight:800;\">Items</div>" +
+                "<ul class=\"history-items\">" + itemsHtml + "</ul>"
               : "") +
             pdfHtml +
           "</div>";
@@ -3432,7 +3442,7 @@ function escapeHistoryHtml(
   value
 ) {
 
-  return String(value || "")
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -3445,7 +3455,7 @@ function escapeHistoryAttribute(
   value
 ) {
 
-  return String(value || "")
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/\"/g, "&quot;")
     .replace(/</g, "&lt;")
