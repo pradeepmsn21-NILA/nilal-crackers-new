@@ -398,6 +398,120 @@
       display: block;
     }
 
+
+
+    /* =====================================================
+       CUSTOMER ORDER HISTORY
+    ===================================================== */
+
+    .history-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .history-overlay.show {
+      display: flex;
+    }
+
+    .history-box {
+      width: min(700px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .history-head h2 {
+      margin: 0;
+    }
+
+    .history-close {
+      border: none;
+      background: #222;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .history-search {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .history-search input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    .history-search button {
+      border: none;
+      border-radius: 9px;
+      padding: 0 16px;
+      background: #222;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .history-status {
+      color: #666;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .history-card {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fffaf5;
+    }
+
+    .history-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0;
+      font-size: 13px;
+    }
+
+    .history-items {
+      margin: 10px 0;
+      padding-left: 18px;
+      font-size: 13px;
+    }
+
+    .history-pdf {
+      display: inline-block;
+      margin-top: 8px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
   </style>
 </head>
 
@@ -411,9 +525,20 @@
       <div class="tagline">Online Booking</div>
     </div>
 
-    <button class="cart" onclick="openCart()">
-      Cart <span id="count">0</span>
-    </button>
+    <div style="display:flex;gap:8px;align-items:center;">
+
+      <button
+        class="cart"
+        onclick="openOrderHistory()"
+      >
+        My Orders
+      </button>
+
+      <button class="cart" onclick="openCart()">
+        Cart <span id="count">0</span>
+      </button>
+
+    </div>
 
   </div>
 </header>
@@ -543,7 +668,8 @@ Mobile :89038 71174
       >
         Cofirm order
       </button>
-
+
+
       </p>
 
     </div>
@@ -552,6 +678,58 @@ Mobile :89038 71174
 
 </div>
 
+
+
+
+<!-- ================================
+     CUSTOMER ORDER HISTORY
+================================= -->
+
+<div
+  id="orderHistoryOverlay"
+  class="history-overlay"
+  onclick="closeOrderHistory(event)"
+>
+
+  <div
+    class="history-box"
+    onclick="event.stopPropagation()"
+  >
+
+    <div class="history-head">
+      <h2>My Orders</h2>
+      <button
+        class="history-close"
+        onclick="closeOrderHistory()"
+      >
+        X
+      </button>
+    </div>
+
+    <div class="history-search">
+      <input
+        id="historyPhone"
+        type="tel"
+        placeholder="Enter mobile number"
+        maxlength="15"
+      >
+      <button onclick="loadOrderHistory()">
+        View Orders
+      </button>
+    </div>
+
+    <div
+      id="historyStatus"
+      class="history-status"
+    >
+      Enter the mobile number used for your order.
+    </div>
+
+    <div id="historyList"></div>
+
+  </div>
+
+</div>
 
 <script>
 
@@ -2748,6 +2926,12 @@ async function submitOrder() {
     );
 
 
+  localStorage.setItem(
+    "nizhalCustomerPhone",
+    phone
+  );
+
+
   const oldText =
     submitButton.textContent;
 
@@ -2835,6 +3019,58 @@ async function submitOrder() {
       throw new Error(
         data.error ||
         "Google Drive upload failed."
+      );
+
+    }
+
+
+    /* ================================
+       SAVE ORDER FOR CUSTOMER HISTORY
+    ================================= */
+
+    submitButton.textContent =
+      "Saving order...";
+
+
+    const orderResponse =
+      await fetch(
+        "/api/order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify({
+            orderId:
+              receipt.orderId,
+            customerName:
+              receipt.customerName,
+            phone:
+              receipt.customerPhone,
+            address:
+              receipt.deliveryAddress,
+            total:
+              receipt.totalAmount,
+            items:
+              receipt.items,
+            pdfUrl:
+              data.viewUrl || ""
+          })
+        }
+      );
+
+    const orderData =
+      await orderResponse.json();
+
+    if (
+      !orderResponse.ok ||
+      !orderData.ok
+    ) {
+
+      throw new Error(
+        orderData.error ||
+        "Order could not be saved."
       );
 
     }
@@ -2984,6 +3220,238 @@ async function submitOrder() {
 
   }
 
+}
+
+
+/* =====================================================
+   CUSTOMER ORDER HISTORY
+===================================================== */
+
+function openOrderHistory() {
+
+  const overlay =
+    document.getElementById(
+      "orderHistoryOverlay"
+    );
+
+  overlay.classList.add(
+    "show"
+  );
+
+  const phoneInput =
+    document.getElementById(
+      "historyPhone"
+    );
+
+  const savedPhone =
+    localStorage.getItem(
+      "nizhalCustomerPhone"
+    ) || "";
+
+  if (savedPhone) {
+    phoneInput.value =
+      savedPhone;
+    loadOrderHistory();
+  }
+
+}
+
+
+function closeOrderHistory(
+  event
+) {
+
+  if (
+    event &&
+    event.target &&
+    event.target.id !==
+      "orderHistoryOverlay"
+  ) {
+    return;
+  }
+
+  const overlay =
+    document.getElementById(
+      "orderHistoryOverlay"
+    );
+
+  overlay.classList.remove(
+    "show"
+  );
+
+}
+
+
+async function loadOrderHistory() {
+
+  const phoneInput =
+    document.getElementById(
+      "historyPhone"
+    );
+
+  const phone =
+    phoneInput.value.trim();
+
+  const status =
+    document.getElementById(
+      "historyStatus"
+    );
+
+  const list =
+    document.getElementById(
+      "historyList"
+    );
+
+  if (!phone) {
+    status.textContent =
+      "Please enter your mobile number.";
+    list.innerHTML = "";
+    return;
+  }
+
+  localStorage.setItem(
+    "nizhalCustomerPhone",
+    phone
+  );
+
+  status.textContent =
+    "Loading your orders...";
+  list.innerHTML = "";
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/order-history?phone=" +
+        encodeURIComponent(phone),
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (
+      !response.ok ||
+      !data.ok
+    ) {
+      throw new Error(
+        data.error ||
+        "Could not load order history."
+      );
+    }
+
+    const orders =
+      Array.isArray(data.orders)
+        ? data.orders
+        : [];
+
+    if (!orders.length) {
+      status.textContent =
+        "No previous orders found for this mobile number.";
+      return;
+    }
+
+    status.textContent =
+      orders.length +
+      " order(s) found.";
+
+    list.innerHTML =
+      orders.map(function(order) {
+
+        const itemList =
+          Array.isArray(order.items)
+            ? order.items
+            : [];
+
+        const itemsHtml =
+          itemList.map(function(item) {
+            const product =
+              item && item.product
+                ? item.product
+                : {};
+            const name =
+              product.name ||
+              item.name ||
+              "Product";
+            const quantity =
+              item.quantity ||
+              0;
+            return
+              "<li>" +
+              escapeHistoryHtml(name) +
+              " x " +
+              escapeHistoryHtml(quantity) +
+              "</li>";
+          }).join("");
+
+        const pdfHtml =
+          order.pdfUrl
+            ? "<a class=\"history-pdf\" href=\"" +
+              escapeHistoryAttribute(order.pdfUrl) +
+              "\" target=\"_blank\" rel=\"noopener\">View PDF</a>"
+            : "";
+
+        return
+          "<div class=\"history-card\">" +
+            "<div class=\"history-row\"><strong>Order ID</strong><span>" +
+              escapeHistoryHtml(order.orderId) +
+            "</span></div>" +
+            "<div class=\"history-row\"><strong>Date</strong><span>" +
+              escapeHistoryHtml(order.date) +
+            "</span></div>" +
+            "<div class=\"history-row\"><strong>Total</strong><span>Rs." +
+              escapeHistoryHtml(order.total) +
+            "</span></div>" +
+            (itemsHtml
+              ? "<ul class=\"history-items\">" + itemsHtml + "</ul>"
+              : "") +
+            pdfHtml +
+          "</div>";
+
+      }).join("");
+
+  }
+  catch (error) {
+
+    console.error(
+      "ORDER HISTORY ERROR:",
+      error
+    );
+
+    status.textContent =
+      "Could not load order history. " +
+      error.message;
+
+  }
+
+}
+
+
+function escapeHistoryHtml(
+  value
+) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function escapeHistoryAttribute(
+  value
+) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/\"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 
