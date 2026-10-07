@@ -86,8 +86,7 @@ const RECAPTCHA_SECRET_KEY =
 */
 
 const OWNER_APP_KEY =
-  process.env.OWNER_APP_KEY || "";
-
+  "Pranila/1522-";
 
 /*
 =========================================================
