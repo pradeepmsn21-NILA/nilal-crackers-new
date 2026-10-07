@@ -747,7 +747,7 @@ const COMPANY_PHONE = "+91-8903871174";
 const WHATSAPP_NUMBER = "918903871174";
 
 const GOOGLE_APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzvlgXHs8HMW-6vnsD3OFyKJ2u-c2wFECmaYz7jVygXum_4P2UZA_2VtBBXzuH266hWoA/exec";
+  "https://script.google.com/macros/s/AKfycbyDE3fNzjuhp9KadyW23NeoLlPxlJezJcHnPf03pIvgkA5m_CUbUlLCxnu1cwBWrtAWUA/exec";
 
 
 /* =====================================================
@@ -3379,8 +3379,7 @@ async function loadOrderHistory() {
             const quantity =
               item.quantity ||
               0;
-            return
-              "<li>" +
+            return "<li>" +
               escapeHistoryHtml(name) +
               " x " +
               escapeHistoryHtml(quantity) +
@@ -3394,8 +3393,7 @@ async function loadOrderHistory() {
               "\" target=\"_blank\" rel=\"noopener\">View PDF</a>"
             : "";
 
-        return
-          "<div class=\"history-card\">" +
+        return "<div class=\"history-card\">" +
             "<div class=\"history-row\"><strong>Order ID</strong><span>" +
               escapeHistoryHtml(order.orderId) +
             "</span></div>" +
