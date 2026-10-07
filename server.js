@@ -2,10 +2,19 @@
 =========================================================
  NIZHAL CRACKERS - SERVER.JS
  Express Backend
+
+ Customer Website
  Products API
  PDF Upload Proxy
  reCAPTCHA Verification
  WhatsApp Support
+ Order History
+ Order Save
+
+ Owner App
+ New Orders
+ Order Count
+ Order Status Update
 =========================================================
 */
 
@@ -59,8 +68,26 @@ app.use(express.static(publicPath));
 
 const GOOGLE_APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbyj2CSePhowZmXWs0btv1ZAQiJVe8omd57GVoDUjSUMBChIZ3R8cyZdbsmafRkkpgGK_A/exec";
+
 const RECAPTCHA_SECRET_KEY =
   process.env.RECAPTCHA_SECRET_KEY || "";
+
+/*
+=========================================================
+ OWNER APP SECURITY KEY
+
+ Set this in your server environment:
+
+ OWNER_APP_KEY=NILAL_OWNER_2026_8472
+
+ IMPORTANT:
+ This must match the OWNER_APP_KEY in Apps Script.
+=========================================================
+*/
+
+const OWNER_APP_KEY =
+  process.env.OWNER_APP_KEY || "";
+
 
 /*
 =========================================================
@@ -69,13 +96,16 @@ const RECAPTCHA_SECRET_KEY =
 */
 
 app.get("/api/health", (req, res) => {
+
   res.json({
     ok: true,
     service: "Nizhal Crackers",
     message: "Server is running",
     time: new Date().toISOString()
   });
+
 });
+
 
 /*
 =========================================================
@@ -84,26 +114,33 @@ app.get("/api/health", (req, res) => {
 */
 
 app.get("/api/products", async (req, res) => {
+
   try {
+
     const response = await fetch(
       GOOGLE_APPS_SCRIPT_URL,
       {
         method: "GET",
+
         headers: {
           Accept: "application/json"
         },
+
         cache: "no-store"
       }
     );
 
     if (!response.ok) {
+
       throw new Error(
         "Google Apps Script returned HTTP " +
         response.status
       );
+
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     let products = data;
 
@@ -111,20 +148,28 @@ app.get("/api/products", async (req, res) => {
       data &&
       Array.isArray(data.products)
     ) {
-      products = data.products;
+
+      products =
+        data.products;
+
     }
 
     if (
       data &&
       Array.isArray(data.data)
     ) {
-      products = data.data;
+
+      products =
+        data.data;
+
     }
 
     if (!Array.isArray(products)) {
+
       throw new Error(
         "Google Apps Script did not return an array."
       );
+
     }
 
     res.json(products);
@@ -137,12 +182,21 @@ app.get("/api/products", async (req, res) => {
     );
 
     res.status(500).json({
+
       ok: false,
-      error: "Products could not be loaded.",
-      details: error.message
+
+      error:
+        "Products could not be loaded.",
+
+      details:
+        error.message
+
     });
+
   }
+
 });
+
 
 /*
 =========================================================
@@ -156,16 +210,20 @@ app.post(
 
     try {
 
-      const token = String(
-        req.body.token || ""
-      ).trim();
+      const token =
+        String(
+          req.body.token || ""
+        ).trim();
 
       if (!token) {
 
         return res.status(400).json({
+
           ok: false,
+
           error:
             "reCAPTCHA token is missing."
+
         });
 
       }
@@ -173,9 +231,12 @@ app.post(
       if (!RECAPTCHA_SECRET_KEY) {
 
         return res.status(500).json({
+
           ok: false,
+
           error:
             "RECAPTCHA_SECRET_KEY is not configured on the server."
+
         });
 
       }
@@ -184,6 +245,7 @@ app.post(
         await fetch(
           "https://www.google.com/recaptcha/api/siteverify",
           {
+
             method: "POST",
 
             headers: {
@@ -193,12 +255,15 @@ app.post(
 
             body:
               new URLSearchParams({
+
                 secret:
                   RECAPTCHA_SECRET_KEY,
 
                 response:
                   token
+
               }).toString()
+
           }
         );
 
@@ -213,18 +278,26 @@ app.post(
         );
 
         return res.status(403).json({
+
           ok: false,
+
           error:
             "reCAPTCHA verification failed.",
+
           details:
             result["error-codes"] || []
+
         });
+
       }
 
       res.json({
+
         ok: true,
+
         message:
           "reCAPTCHA verified successfully."
+
       });
 
     } catch (error) {
@@ -235,15 +308,22 @@ app.post(
       );
 
       res.status(500).json({
+
         ok: false,
+
         error:
           "reCAPTCHA verification error.",
+
         details:
           error.message
+
       });
+
     }
+
   }
 );
+
 
 /*
 =========================================================
@@ -271,9 +351,12 @@ app.post(
       if (!pdfBase64) {
 
         return res.status(400).json({
+
           ok: false,
+
           error:
             "PDF data is missing."
+
         });
 
       }
@@ -289,9 +372,12 @@ app.post(
       ) {
 
         return res.status(400).json({
+
           ok: false,
+
           error:
             "Invalid PDF data."
+
         });
 
       }
@@ -305,18 +391,22 @@ app.post(
         await fetch(
           GOOGLE_APPS_SCRIPT_URL,
           {
+
             method: "POST",
 
             headers: {
+
               "Content-Type":
                 "application/json",
 
               Accept:
                 "application/json"
+
             },
 
             body:
               JSON.stringify({
+
                 action:
                   "uploadPdf",
 
@@ -325,7 +415,9 @@ app.post(
 
                 fileName:
                   fileName
+
               })
+
           }
         );
 
@@ -355,6 +447,7 @@ app.post(
           "Google Apps Script PDF upload failed. HTTP " +
           response.status
         );
+
       }
 
       const viewUrl =
@@ -385,6 +478,7 @@ app.post(
 
         fileName:
           fileName
+
       });
 
     } catch (error) {
@@ -403,10 +497,14 @@ app.post(
 
         details:
           error.message
+
       });
+
     }
+
   }
 );
+
 
 /*
 =========================================================
@@ -428,9 +526,14 @@ app.get(
       if (!phone) {
 
         return res.status(400).json({
+
           ok: false,
-          error: "Mobile number is required.",
+
+          error:
+            "Mobile number is required.",
+
           orders: []
+
         });
 
       }
@@ -441,13 +544,20 @@ app.get(
         encodeURIComponent(phone);
 
       const response =
-        await fetch(url, {
-          method: "GET",
-          headers: {
-            Accept: "application/json"
-          },
-          cache: "no-store"
-        });
+        await fetch(
+          url,
+          {
+
+            method: "GET",
+
+            headers: {
+              Accept: "application/json"
+            },
+
+            cache: "no-store"
+
+          }
+        );
 
       const text =
         await response.text();
@@ -455,21 +565,40 @@ app.get(
       let data;
 
       try {
-        data = JSON.parse(text);
+
+        data =
+          JSON.parse(text);
+
       } catch {
+
         data = {
+
           ok: false,
-          error: "Invalid response from Google Apps Script.",
-          raw: text
+
+          error:
+            "Invalid response from Google Apps Script.",
+
+          raw:
+            text
+
         };
+
       }
 
       if (!response.ok) {
+
         return res.status(502).json({
+
           ok: false,
-          error: "Order history service failed.",
-          details: data
+
+          error:
+            "Order history service failed.",
+
+          details:
+            data
+
         });
+
       }
 
       return res.json(data);
@@ -482,12 +611,21 @@ app.get(
       );
 
       return res.status(500).json({
+
         ok: false,
-        error: "Could not load order history.",
-        details: error.message,
+
+        error:
+          "Could not load order history.",
+
+        details:
+          error.message,
+
         orders: []
+
       });
+
     }
+
   }
 );
 
@@ -510,9 +648,12 @@ app.post(
       if (!order) {
 
         return res.status(400).json({
+
           ok: false,
+
           error:
             "Order data is missing."
+
         });
 
       }
@@ -521,24 +662,30 @@ app.post(
         await fetch(
           GOOGLE_APPS_SCRIPT_URL,
           {
+
             method: "POST",
 
             headers: {
+
               "Content-Type":
                 "application/json",
 
               Accept:
                 "application/json"
+
             },
 
             body:
               JSON.stringify({
+
                 action:
                   "saveOrder",
 
                 order:
                   order
+
               })
+
           }
         );
 
@@ -567,6 +714,7 @@ app.post(
 
         data:
           data
+
       });
 
     } catch (error) {
@@ -585,10 +733,539 @@ app.post(
 
         details:
           error.message
+
       });
+
     }
+
   }
 );
+
+
+/*
+=========================================================
+ OWNER APP
+ SECURITY CHECK
+=========================================================
+*/
+
+function checkOwnerKey(req, res) {
+
+  const suppliedKey =
+    String(
+      req.headers["x-owner-key"] ||
+      req.query.key ||
+      req.body?.key ||
+      ""
+    ).trim();
+
+  if (!OWNER_APP_KEY) {
+
+    res.status(500).json({
+
+      ok: false,
+
+      error:
+        "OWNER_APP_KEY is not configured on the server."
+
+    });
+
+    return false;
+
+  }
+
+  if (
+    suppliedKey !==
+    OWNER_APP_KEY
+  ) {
+
+    res.status(401).json({
+
+      ok: false,
+
+      error:
+        "Unauthorized owner access."
+
+    });
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
+
+/*
+=========================================================
+ OWNER APP
+ GET ORDERS
+=========================================================
+
+ Example:
+
+ /api/owner/orders?status=New
+
+=========================================================
+*/
+
+app.get(
+  "/api/owner/orders",
+  async (req, res) => {
+
+    try {
+
+      if (!checkOwnerKey(req, res)) {
+        return;
+      }
+
+      const status =
+        String(
+          req.query.status || ""
+        ).trim();
+
+      let url =
+        GOOGLE_APPS_SCRIPT_URL +
+        "?action=getOwnerOrders";
+
+      if (status) {
+
+        url +=
+          "&status=" +
+          encodeURIComponent(status);
+
+      }
+
+      const response =
+        await fetch(
+          url,
+          {
+
+            method: "GET",
+
+            headers: {
+
+              Accept:
+                "application/json",
+
+              "X-Owner-Key":
+                OWNER_APP_KEY
+
+            },
+
+            cache:
+              "no-store"
+
+          }
+        );
+
+      const text =
+        await response.text();
+
+      let data;
+
+      try {
+
+        data =
+          JSON.parse(text);
+
+      } catch {
+
+        data = {
+
+          ok: false,
+
+          error:
+            "Invalid response from Google Apps Script.",
+
+          raw:
+            text
+
+        };
+
+      }
+
+      if (!response.ok) {
+
+        return res.status(502).json({
+
+          ok: false,
+
+          error:
+            "Owner order service failed.",
+
+          details:
+            data
+
+        });
+
+      }
+
+      return res.json(data);
+
+    } catch (error) {
+
+      console.error(
+        "OWNER ORDERS ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        ok: false,
+
+        error:
+          "Could not load owner orders.",
+
+        details:
+          error.message,
+
+        orders: []
+
+      });
+
+    }
+
+  }
+);
+
+
+/*
+=========================================================
+ OWNER APP
+ NEW ORDER COUNT
+=========================================================
+*/
+
+app.get(
+  "/api/owner/new-count",
+  async (req, res) => {
+
+    try {
+
+      if (!checkOwnerKey(req, res)) {
+        return;
+      }
+
+      const url =
+        GOOGLE_APPS_SCRIPT_URL +
+        "?action=getNewOrderCount";
+
+      const response =
+        await fetch(
+          url,
+          {
+
+            method: "GET",
+
+            headers: {
+
+              Accept:
+                "application/json",
+
+              "X-Owner-Key":
+                OWNER_APP_KEY
+
+            },
+
+            cache:
+              "no-store"
+
+          }
+        );
+
+      const text =
+        await response.text();
+
+      let data;
+
+      try {
+
+        data =
+          JSON.parse(text);
+
+      } catch {
+
+        data = {
+
+          ok: false,
+
+          error:
+            "Invalid response from Google Apps Script.",
+
+          raw:
+            text
+
+        };
+
+      }
+
+      if (!response.ok) {
+
+        return res.status(502).json({
+
+          ok: false,
+
+          error:
+            "New order count service failed.",
+
+          details:
+            data
+
+        });
+
+      }
+
+      return res.json(data);
+
+    } catch (error) {
+
+      console.error(
+        "OWNER COUNT ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        ok: false,
+
+        error:
+          "Could not get new order count.",
+
+        details:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+
+/*
+=========================================================
+ OWNER APP
+ UPDATE ORDER STATUS
+=========================================================
+*/
+
+app.post(
+  "/api/owner/order-status",
+  async (req, res) => {
+
+    try {
+
+      if (!checkOwnerKey(req, res)) {
+        return;
+      }
+
+      const orderId =
+        String(
+          req.body.orderId || ""
+        ).trim();
+
+      const status =
+        String(
+          req.body.status || ""
+        ).trim();
+
+      if (!orderId) {
+
+        return res.status(400).json({
+
+          ok: false,
+
+          error:
+            "Order ID is required."
+
+        });
+
+      }
+
+      if (!status) {
+
+        return res.status(400).json({
+
+          ok: false,
+
+          error:
+            "Order status is required."
+
+        });
+
+      }
+
+      const allowedStatuses = [
+
+        "New",
+
+        "Confirmed",
+
+        "Preparing",
+
+        "Delivered",
+
+        "Cancelled"
+
+      ];
+
+      if (
+        !allowedStatuses.includes(
+          status
+        )
+      ) {
+
+        return res.status(400).json({
+
+          ok: false,
+
+          error:
+            "Invalid order status.",
+
+          allowedStatuses:
+            allowedStatuses
+
+        });
+
+      }
+
+      const response =
+        await fetch(
+          GOOGLE_APPS_SCRIPT_URL,
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Content-Type":
+                "application/json",
+
+              Accept:
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+
+                action:
+                  "updateOrderStatus",
+
+                key:
+                  OWNER_APP_KEY,
+
+                orderId:
+                  orderId,
+
+                status:
+                  status
+
+              })
+
+          }
+        );
+
+      const text =
+        await response.text();
+
+      let data;
+
+      try {
+
+        data =
+          JSON.parse(text);
+
+      } catch {
+
+        data = {
+
+          ok: false,
+
+          error:
+            "Invalid response from Google Apps Script.",
+
+          raw:
+            text
+
+        };
+
+      }
+
+      if (!response.ok) {
+
+        return res.status(502).json({
+
+          ok: false,
+
+          error:
+            "Order status service failed.",
+
+          details:
+            data
+
+        });
+
+      }
+
+      return res.json(data);
+
+    } catch (error) {
+
+      console.error(
+        "OWNER STATUS ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+
+        ok: false,
+
+        error:
+          "Could not update order status.",
+
+        details:
+          error.message
+
+      });
+
+    }
+
+  }
+);
+
+
+/*
+=========================================================
+ OWNER APP HEALTH
+=========================================================
+*/
+
+app.get(
+  "/api/owner/health",
+  (req, res) => {
+
+    if (!checkOwnerKey(req, res)) {
+      return;
+    }
+
+    res.json({
+
+      ok: true,
+
+      service:
+        "Nizhal Crackers Owner API",
+
+      message:
+        "Owner API is working."
+
+    });
+
+  }
+);
+
 
 /*
 =========================================================
@@ -601,23 +1278,22 @@ app.use(
   (req, res) => {
 
     res.status(404).json({
+
       ok: false,
+
       error:
         "API endpoint not found."
+
     });
 
   }
 );
 
+
 /*
 =========================================================
  FRONTEND FALLBACK
 =========================================================
-*/
-
-/*
- Express 5 compatible fallback.
- Do NOT use app.get("*") here.
 */
 
 app.get(
@@ -633,6 +1309,35 @@ app.get(
 
   }
 );
+
+
+/*
+=========================================================
+ SITEMAP
+=========================================================
+*/
+
+app.get(
+  "/sitemap.xml",
+  (req, res) => {
+
+    res.header(
+      "Content-Type",
+      "application/xml"
+    );
+
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://nizhalcrackers.online/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`);
+
+  }
+);
+
 
 /*
 =========================================================
@@ -688,8 +1393,28 @@ app.listen(
     );
 
     console.log(
-      "Health API:",
-      "/api/health"
+      "Order History API:",
+      "/api/order-history"
+    );
+
+    console.log(
+      "Owner Orders API:",
+      "/api/owner/orders"
+    );
+
+    console.log(
+      "Owner New Count API:",
+      "/api/owner/new-count"
+    );
+
+    console.log(
+      "Owner Status API:",
+      "/api/owner/order-status"
+    );
+
+    console.log(
+      "Owner Health API:",
+      "/api/owner/health"
     );
 
     console.log(
@@ -698,14 +1423,3 @@ app.listen(
 
   }
 );
-app.get('/sitemap.xml', (req, res) => {
-  res.header('Content-Type', 'application/xml');
-  res.send(`<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://nizhalcrackers.online/</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-</urlset>`);
-});
