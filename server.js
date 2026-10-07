@@ -412,6 +412,90 @@ app.post(
 
 /*
 =========================================================
+ ORDER HISTORY API
+=========================================================
+*/
+
+app.get(
+  "/api/order-history",
+  async (req, res) => {
+
+    try {
+
+      const phone =
+        String(
+          req.query.phone || ""
+        ).trim();
+
+      if (!phone) {
+
+        return res.status(400).json({
+          ok: false,
+          error: "Mobile number is required.",
+          orders: []
+        });
+
+      }
+
+      const url =
+        GOOGLE_APPS_SCRIPT_URL +
+        "?action=getOrderHistory&phone=" +
+        encodeURIComponent(phone);
+
+      const response =
+        await fetch(url, {
+          method: "GET",
+          headers: {
+            Accept: "application/json"
+          },
+          cache: "no-store"
+        });
+
+      const text =
+        await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = {
+          ok: false,
+          error: "Invalid response from Google Apps Script.",
+          raw: text
+        };
+      }
+
+      if (!response.ok) {
+        return res.status(502).json({
+          ok: false,
+          error: "Order history service failed.",
+          details: data
+        });
+      }
+
+      return res.json(data);
+
+    } catch (error) {
+
+      console.error(
+        "ORDER HISTORY ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        ok: false,
+        error: "Could not load order history.",
+        details: error.message,
+        orders: []
+      });
+    }
+  }
+);
+
+
+/*
+=========================================================
  ORDER SAVE API
 =========================================================
 */
