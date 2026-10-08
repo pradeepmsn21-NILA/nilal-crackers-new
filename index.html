@@ -1,71 +1,905 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Cart Order Submission</title>
-    <style>
-        .cart-container { width: 300px; margin: 20px auto; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .submit-btn { background-color: #28a745; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; width: 100%; }
-        .submit-btn:hover { background-color: #218838; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Nizhal Crackers - Online Booking</title>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- jsPDF AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff8ef;
+      color: #20130d;
+    }
+
+    /* ================================
+       HEADER
+    ================================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid #eadbca;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #a50000;
+      letter-spacing: .4px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    .cart {
+      border: none;
+      background: #128c7e;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 25px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ================================
+       HERO
+    ================================= */
+
+    .hero {
+      color: white;
+      background:
+        linear-gradient(
+          135deg,
+          #620000,
+          #b00000,
+          #e85d04,
+          #ff8c00
+        );
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 48px 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 64px);
+      font-weight: 900;
+    }
+
+    .hero p {
+      font-size: 17px;
+      margin-top: 12px;
+    }
+
+    /* ================================
+       MAIN
+    ================================= */
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      padding: 14px;
+      border: 1px solid #e5d2bd;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .unit-select {
+      padding: 14px;
+      border: 1px solid #e5d2bd;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .status {
+      color: #765f50;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    /* ================================
+       PRODUCT GRID & CONTROLS
+    ================================= */
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fill, minmax(215px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #eadbca;
+      border-radius: 15px;
+      padding: 14px;
+      box-shadow:
+        0 3px 10px rgba(100, 30, 0, .06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .discount-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: #d00000;
+      color: white;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .product-name {
+      font-size: 17px;
+      font-weight: 900;
+      margin: 12px 0 8px;
+      min-height: 40px;
+    }
+
+    .product-unit {
+      font-size: 12px;
+      color: #76665c;
+    }
+
+    .mrp {
+      color: #888;
+      text-decoration: line-through;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .price {
+      font-size: 21px;
+      font-weight: 900;
+      margin: 6px 0 12px;
+      color: #1e120d;
+    }
+
+    .add-button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 9px;
+      background: #a80000;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .add-button:hover {
+      background: #790000;
+    }
+
+    .card-qty-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fdf3e7;
+      border: 1px solid #e2cbb5;
+      border-radius: 9px;
+      padding: 4px;
+      width: 100%;
+    }
+
+    .card-qty-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: #a80000;
+      color: white;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-qty-btn:hover {
+      background: #790000;
+    }
+
+    .card-qty-count {
+      font-size: 16px;
+      font-weight: 900;
+      color: #20130d;
+    }
+
+    /* ================================
+       DRAWER
+    ================================= */
+
+    .drawer {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+    }
+
+    .drawer.open {
+      display: block;
+    }
+
+    .shade {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+    }
+
+    .panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(480px, 100%);
+      height: 100%;
+      background: white;
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eadbca;
+      padding-bottom: 10px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+    }
+
+    .close-button {
+      border: 1px solid #ccc;
+      background: white;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    .cart-item {
+      padding: 13px 0;
+      border-bottom: 1px solid #eadbca;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-name {
+      font-weight: 900;
+      font-size: 15px;
+    }
+
+    .cart-info {
+      color: #76665c;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .cart-item-price {
+      font-weight: 900;
+      font-size: 15px;
+      color: #a80000;
+      text-align: right;
+    }
+
+    .total-box {
+      display: flex;
+      justify-content: space-between;
+      font-size: 23px;
+      font-weight: 900;
+      padding: 18px 0;
+    }
+
+    .field {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      margin-bottom: 9px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea.field {
+      resize: vertical;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 9px;
+      background: #25d366;
+      color: #073b1a;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .note {
+      color: #777;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        padding: 10px;
+      }
+
+      .product-name {
+        font-size: 15px;
+      }
+
+      .hero-inner {
+        padding: 35px 15px;
+      }
+    }
+
+    .product-image-box {
+      width: 100%;
+      height: 190px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .history-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .history-overlay.show {
+      display: flex;
+    }
+
+    .history-box {
+      width: min(700px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .history-head h2 {
+      margin: 0;
+    }
+
+    .history-close {
+      border: none;
+      background: #222;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .history-search {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .history-search input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    .history-search button {
+      border: none;
+      border-radius: 9px;
+      padding: 0 16px;
+      background: #222;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .history-status {
+      color: #666;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="cart-container">
-    <h3>Your Cart</h3>
-    <div id="cart-items">
-        <div class="cart-item">
-            <span class="product-name">Product A</span>
-            <span class="product-price">₹100</span>
-        </div>
-        <div class="cart-item">
-            <span class="product-name">Product B</span>
-            <span class="product-price">₹250</span>
-        </div>
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">NIZHAL CRACKERS</div>
+      <div class="tagline">Online Booking</div>
     </div>
-    <hr>
-    <!-- Download Button நீக்கப்பட்டு, Submit Order பட்டன் மட்டுமே உள்ளது -->
-    <button type="button" class="submit-btn" onclick="submitOrder()">Submit Order</button>
+
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="cart" onclick="openOrderHistory()">My Orders</button>
+      <button class="cart" onclick="openCart()">Cart <span id="count">0</span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Nizhal Crackers</h1>
+    Mobile : 89038 71174
+    <p>Select your crackers and place your order through online.</p>
+  </div>
+</section>
+
+<main>
+  <div class="toolbar">
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="Search products..."
+      oninput="renderProducts()"
+    >
+
+    <select
+      id="unitSelect"
+      class="unit-select"
+      onchange="renderProducts()"
+    >
+      <option value="">All Units</option>
+    </select>
+  </div>
+
+  <div id="status" class="status">Loading products...</div>
+  <div id="grid" class="grid"></div>
+</main>
+
+<!-- CART DRAWER -->
+<div id="drawer" class="drawer">
+  <div class="shade" onclick="closeCart()"></div>
+  <aside class="panel">
+    <div class="panel-head">
+      <h2>Order Summary</h2>
+      <button class="close-button" onclick="closeCart()">X</button>
+    </div>
+
+    <div id="cartItems"></div>
+    <p id="emptyCart" class="note">Your cart is empty.</p>
+
+    <div id="orderForm" style="display:none">
+      <div class="total-box">
+        <span>Total</span>
+        <span id="cartTotal">Rs.0.00</span>
+      </div>
+
+      <input id="customerName" class="field" type="text" placeholder="Customer Name *">
+      <input id="customerPhone" class="field" type="tel" placeholder="Mobile Number *">
+      <textarea id="customerAddress" class="field" rows="4" placeholder="Delivery Address *"></textarea>
+
+      <button id="submitButton" class="submit-button" onclick="submitOrder()">
+        Confirm order
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- CUSTOMER ORDER HISTORY -->
+<div id="orderHistoryOverlay" class="history-overlay" onclick="closeOrderHistory(event)">
+  <div class="history-box" onclick="event.stopPropagation()">
+    <div class="history-head">
+      <h2>My Orders</h2>
+      <button class="history-close" onclick="closeOrderHistory()">X</button>
+    </div>
+
+    <div class="history-search">
+      <input id="historyPhone" type="tel" placeholder="Enter mobile number" maxlength="15">
+      <button onclick="loadOrderHistory()">View Orders</button>
+    </div>
+
+    <div id="historyStatus" class="history-status">
+      Enter the mobile number used for your order.
+    </div>
+
+    <div id="historyList"></div>
+  </div>
 </div>
 
 <script>
-async function submitOrder() {
-    // Cart-இல் உள்ள பொருட்களை சேகரித்தல்
-    const cartItems = [];
-    document.querySelectorAll('.cart-item').forEach(item => {
-        const name = item.querySelector('.product-name').innerText;
-        const priceText = item.querySelector('.product-price').innerText.replace('₹', '');
-        cartItems.push({
-            product_name: name,
-            price: parseFloat(priceText)
-        });
+
+const COMPANY_NAME = "NIZHAL CRACKERS";
+const COMPANY_ADDRESS = "NO.2A THIRUTHANGAL,SIVAKASI,VIRUTHUNAGAR- 626 130";
+const COMPANY_PHONE = "+91-8903871174";
+const WHATSAPP_NUMBER = "918903871174";
+const DEFAULT_DISCOUNT = 75; // 75% Offer
+
+const FALLBACK_PRODUCTS = [
+  { id: "1", sno: 1, name: "10 cm Sparklers Electric", unit: "1 Box", mrp: 120 },
+  { id: "2", sno: 2, name: "10 cm Sparklers Color", unit: "1 Box", mrp: 130 },
+  { id: "3", sno: 3, name: "Ground Chakka Big", unit: "1 Box", mrp: 240 },
+  { id: "4", sno: 4, name: "Flower Pots Special", unit: "1 Box", mrp: 350 },
+  { id: "5", sno: 5, name: "7 Shot Rockets", unit: "1 Box", mrp: 400 }
+];
+
+function getDisplayProductName(product) {
+  return String(product?.name || "").trim();
+}
+
+let products = [];
+
+function getProductImage(product) {
+  const sno = Number(product.sno || product.id || 0);
+  if (!sno || sno < 1 || sno > 197) return "";
+  const number = sno < 100 ? String(sno).padStart(2, "0") : String(sno);
+  return `products/${number}.png`;
+}
+
+let cart = JSON.parse(localStorage.getItem("nizhalCrackersCart") || "{}");
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+async function loadProducts() {
+  const status = document.getElementById("status");
+  try {
+    let data;
+    const response = await fetch("/api/products", { cache: "no-store" }).catch(() => null);
+    
+    if (response && response.ok) {
+      data = await response.json();
+    } else {
+      data = FALLBACK_PRODUCTS;
+    }
+
+    if (!Array.isArray(data) || !data.length) {
+      data = FALLBACK_PRODUCTS;
+    }
+
+    products = data.map((product, index) => {
+      const mrp = Number(product.mrp ?? 0);
+      const discount = Number(product.discount ?? DEFAULT_DISCOUNT);
+      const calculatedPrice = mrp > 0 ? mrp - (mrp * (discount / 100)) : 0;
+      const finalPrice = Math.round(calculatedPrice);
+
+      return {
+        ...product,
+        id: String(product.id ?? index + 1),
+        sno: Number(product.sno ?? index + 1),
+        name: String(product.name ?? ""),
+        unit: String(product.unit ?? ""),
+        mrp: mrp,
+        discount: discount,
+        price: finalPrice
+      };
     });
 
-    const orderData = {
-        order_id: "ORD-" + Math.floor(100000 + Math.random() * 900000),
-        items: cartItems,
-        total_amount: cartItems.reduce((sum, item) => sum + item.price, 0)
-    };
+    Object.keys(cart).forEach(id => {
+      if (!products.some(p => String(p.id) === String(id))) {
+        delete cart[id];
+      }
+    });
 
-    try {
-        const response = await fetch('/create-receipt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert('Order submitted successfully!');
-        } else {
-            alert('Failed to submit order.');
-        }
-    } catch (error) {
-        console.error('Error submitting order:', error);
-        alert('An error occurred while submitting the order.');
-    }
+    saveCart();
+    buildUnits();
+    renderProducts();
+    status.textContent = products.length + " products loaded successfully.";
+  } catch (error) {
+    console.error(error);
+    status.textContent = "Error loading products.";
+  }
 }
+
+function buildUnits() {
+  const select = document.getElementById("unitSelect");
+  const units = [...new Set(products.map(p => p.unit).filter(Boolean))];
+
+  select.innerHTML = '<option value="">All Units</option>';
+  units.forEach(unit => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    select.appendChild(option);
+  });
+}
+
+function renderProducts() {
+  const grid = document.getElementById("grid");
+  const search = String(document.getElementById("search").value || "").toLowerCase().trim();
+  const selectedUnit = document.getElementById("unitSelect").value;
+
+  const filtered = products.filter(product => {
+    const matchesSearch = !search ||
+      product.name.toLowerCase().includes(search) ||
+      getDisplayProductName(product).toLowerCase().includes(search);
+    const matchesUnit = !selectedUnit || product.unit === selectedUnit;
+    return matchesSearch && matchesUnit;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = "<p>No products found.</p>";
+    updateCart();
+    return;
+  }
+
+  grid.innerHTML = filtered.map(product => {
+    const discountText = product.discount > 0 ? `${product.discount}% OFF` : "SPECIAL";
+    const pid = String(product.id).replace(/'/g, "\\'");
+    const currentQty = Number(cart[product.id]) || 0;
+
+    const actionControls = currentQty > 0 ? `
+      <div class="card-qty-controls">
+        <button class="card-qty-btn" onclick="changeQuantity('${pid}', -1)">-</button>
+        <span class="card-qty-count">${currentQty}</span>
+        <button class="card-qty-btn" onclick="changeQuantity('${pid}', 1)">+</button>
+      </div>
+    ` : `
+      <button class="add-button" onclick="addToCart('${pid}')">
+        + Add to Cart
+      </button>
+    `;
+
+    return `
+      <div class="card">
+        <div>
+          <span class="discount-badge">${escapeHTML(discountText)}</span>
+          <div class="product-image-box">
+            <img
+              src="${getProductImage(product)}"
+              alt="${escapeHTML(getDisplayProductName(product))}"
+              class="product-image"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            >
+          </div>
+          <div class="product-name">${escapeHTML(getDisplayProductName(product))}</div>
+          <div class="product-unit">${escapeHTML(product.unit)}</div>
+          <div class="mrp">MRP Rs.${Number(product.mrp || 0).toLocaleString("en-IN")}</div>
+          <div class="price">Rs.${Number(product.price || 0).toLocaleString("en-IN")}</div>
+        </div>
+        ${actionControls}
+      </div>
+    `;
+  }).join("");
+
+  updateCart();
+}
+
+function addToCart(id) {
+  id = String(id);
+  const product = products.find(p => String(p.id) === id);
+  if (!product) {
+    alert("Product not found. Please refresh the page.");
+    return;
+  }
+  cart[id] = (Number(cart[id]) || 0) + 1;
+  saveCart();
+  renderProducts();
+}
+
+function changeQuantity(id, amount) {
+  id = String(id);
+  cart[id] = (Number(cart[id]) || 0) + Number(amount);
+  if (cart[id] <= 0) delete cart[id];
+  saveCart();
+  renderProducts();
+}
+
+function getCartItems() {
+  return Object.entries(cart).map(([id, quantity]) => {
+    const product = products.find(p => String(p.id) === String(id));
+    if (!product) return null;
+    return { product, quantity: Number(quantity) || 0 };
+  }).filter(Boolean);
+}
+
+function getCartTotal() {
+  return getCartItems().reduce((total, item) => total + (Number(item.product.price) || 0) * item.quantity, 0);
+}
+
+function saveCart() {
+  localStorage.setItem("nizhalCrackersCart", JSON.stringify(cart));
+}
+
+function updateCart() {
+  const items = getCartItems();
+  const count = items.reduce((total, item) => total + item.quantity, 0);
+
+  document.getElementById("count").textContent = count;
+  document.getElementById("emptyCart").style.display = items.length ? "none" : "block";
+  document.getElementById("orderForm").style.display = items.length ? "block" : "none";
+
+  const container = document.getElementById("cartItems");
+  
+  container.innerHTML = items.map(item => {
+    const p = item.product;
+    const amount = p.price * item.quantity;
+    return `
+      <div class="cart-item">
+        <div>
+          <div class="cart-name">${escapeHTML(p.name)}</div>
+          <div class="cart-info">
+            ${escapeHTML(p.unit)} | Qty: <strong>${item.quantity}</strong> × Rs.${Number(p.price).toFixed(2)}
+          </div>
+        </div>
+        <div class="cart-item-price">
+          Rs.${amount.toFixed(2)}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("cartTotal").textContent = "Rs." + getCartTotal().toFixed(2);
+}
+
+function openCart() {
+  document.getElementById("drawer").classList.add("open");
+  updateCart();
+}
+
+function closeCart() {
+  document.getElementById("drawer").classList.remove("open");
+}
+
+async function submitOrder() {
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+
+  if (!name || !phone || !address) {
+    alert("Please fill in all mandatory fields (*)");
+    return;
+  }
+
+  const items = getCartItems();
+  if (!items.length) {
+    alert("Your cart is empty!");
+    return;
+  }
+
+  const submitBtn = document.getElementById("submitButton");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Processing Order...";
+
+  let message = `*NEW ORDER - ${COMPANY_NAME}*\n`;
+  message += `-------------------------\n`;
+  message += `*Name:* ${name}\n`;
+  message += `*Phone:* ${phone}\n`;
+  message += `*Address:* ${address}\n\n`;
+  message += `*ORDER ITEMS:*\n`;
+
+  items.forEach((item, i) => {
+    message += `${i + 1}. ${item.product.name} (${item.product.unit}) - ${item.quantity} x Rs.${item.product.price} = Rs.${item.product.price * item.quantity}\n`;
+  });
+
+  message += `\n*TOTAL AMOUNT:* Rs.${getCartTotal().toFixed(2)}`;
+
+  const encodedUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+  cart = {};
+  saveCart();
+  renderProducts();
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Confirm order";
+
+  alert("Order prepared! Redirecting to WhatsApp to send confirmation.");
+  window.open(encodedUrl, "_blank");
+  closeCart();
+}
+
+function openOrderHistory() {
+  document.getElementById("orderHistoryOverlay").classList.add("show");
+}
+
+function closeOrderHistory(e) {
+  if (!e || e.target.id === "orderHistoryOverlay" || e.target.classList.contains("history-close")) {
+    document.getElementById("orderHistoryOverlay").classList.remove("show");
+  }
+}
+
+function loadOrderHistory() {
+  const phone = document.getElementById("historyPhone").value.trim();
+  const status = document.getElementById("historyStatus");
+  if (!phone) {
+    status.textContent = "Please enter a valid phone number.";
+    return;
+  }
+  status.textContent = "Searching orders for " + phone + "...";
+}
+
+window.addEventListener("DOMContentLoaded", loadProducts);
+
 </script>
 
 </body>
