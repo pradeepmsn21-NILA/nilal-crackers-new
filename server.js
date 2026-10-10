@@ -42,7 +42,7 @@ const GOOGLE_APPS_SCRIPT_URL =
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY || "";
 
 // Render Environment Variables-ல் OWNER_APP_KEY அமைக்கவும்.
-const OWNER_APP_KEY = process.env.OWNER_APP_KEY || "Pranila/1522-";
+const OWNER_APP_KEY = (process.env.OWNER_APP_KEY || "").trim();
 
 /*
 =========================================================
