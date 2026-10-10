@@ -1,455 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nizhal Crackers - Online Booking</title>
 
-  <title>Nizhal Crackers - Online Booking</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #fff8ef;
-      color: #20130d;
-    }
-
-    /* HEADER */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #ffffff;
-      border-bottom: 1px solid #eadbca;
-    }
-
-    .nav {
-      max-width: 1200px;
-      margin: auto;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 900;
-      color: #a50000;
-      letter-spacing: .4px;
-    }
-
-    .tagline {
-      font-size: 12px;
-      color: #555;
-      margin-top: 3px;
-    }
-
-    .cart {
-      border: none;
-      background: #128c7e;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 25px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    /* HERO */
-    .hero {
-      color: white;
-      background: linear-gradient(135deg, #620000, #b00000, #e85d04, #ff8c00);
-    }
-
-    .hero-inner {
-      max-width: 1200px;
-      margin: auto;
-      padding: 48px 18px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(38px, 7vw, 64px);
-      font-weight: 900;
-    }
-
-    .hero p {
-      font-size: 17px;
-      margin-top: 12px;
-    }
-
-    /* MAIN */
-    main {
-      max-width: 1200px;
-      margin: auto;
-      padding: 18px;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-
-    .search {
-      flex: 1;
-      min-width: 220px;
-      padding: 14px;
-      border: 1px solid #e5d2bd;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    .unit-select {
-      padding: 14px;
-      border: 1px solid #e5d2bd;
-      border-radius: 10px;
-      background: white;
-    }
-
-    .status {
-      color: #765f50;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    /* GRID & CARDS */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid #eadbca;
-      border-radius: 15px;
-      padding: 14px;
-      box-shadow: 0 3px 10px rgba(100, 30, 0, .06);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .discount-badge {
-      display: inline-block;
-      align-self: flex-start;
-      background: #d00000;
-      color: white;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .product-name {
-      font-size: 17px;
-      font-weight: 900;
-      margin: 12px 0 8px;
-      min-height: 40px;
-    }
-
-    .product-unit {
-      font-size: 12px;
-      color: #76665c;
-    }
-
-    .mrp {
-      color: #888;
-      text-decoration: line-through;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .price {
-      font-size: 21px;
-      font-weight: 900;
-      margin: 6px 0 12px;
-      color: #1e120d;
-    }
-
-    .add-button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 9px;
-      background: #a80000;
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .add-button:hover {
-      background: #790000;
-    }
-
-    .card-qty-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #fdf3e7;
-      border: 1px solid #e2cbb5;
-      border-radius: 9px;
-      padding: 4px;
-      width: 100%;
-    }
-
-    .card-qty-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: #a80000;
-      color: white;
-      border-radius: 6px;
-      font-weight: 900;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-qty-count {
-      font-size: 16px;
-      font-weight: 900;
-      color: #20130d;
-    }
-
-    /* DRAWER */
-    .drawer {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-    }
-
-    .drawer.open {
-      display: block;
-    }
-
-    .shade {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.55);
-    }
-
-    .panel {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: min(480px, 100%);
-      height: 100%;
-      background: white;
-      overflow-y: auto;
-      padding: 18px;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #eadbca;
-      padding-bottom: 10px;
-    }
-
-    .close-button {
-      border: 1px solid #ccc;
-      background: white;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-
-    .cart-item {
-      padding: 13px 0;
-      border-bottom: 1px solid #eadbca;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cart-name {
-      font-weight: 900;
-      font-size: 15px;
-    }
-
-    .cart-info {
-      color: #76665c;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .cart-item-price {
-      font-weight: 900;
-      font-size: 15px;
-      color: #a80000;
-    }
-
-    .total-box {
-      display: flex;
-      justify-content: space-between;
-      font-size: 23px;
-      font-weight: 900;
-      padding: 18px 0;
-    }
-
-    .field {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      margin-bottom: 9px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    textarea.field {
-      resize: vertical;
-    }
-
-    .submit-button {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 9px;
-      background: #25d366;
-      color: #073b1a;
-      font-weight: 900;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .note {
-      color: #777;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .product-image-box {
-      width: 100%;
-      height: 190px;
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 12px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .product-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* ORDER HISTORY MODAL */
-    .history-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 10000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 15px;
-    }
-
-    .history-overlay.show {
-      display: flex;
-    }
-
-    .history-box {
-      width: min(700px, 100%);
-      max-height: 90vh;
-      overflow: auto;
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-
-    .history-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .history-close {
-      border: none;
-      background: #222;
-      color: #fff;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-weight: 900;
-    }
-
-    .history-search {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-
-    .history-search input {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      font-size: 15px;
-    }
-
-    .history-search button {
-      border: none;
-      border-radius: 9px;
-      padding: 0 16px;
-      background: #222;
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .history-card {
-      border: 1px solid #eee;
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-      background: #fffaf5;
-    }
-
-    .history-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 4px 0;
-      font-size: 13px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff8ef;color:#20130d}
+header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid #eadbca}
+.nav{max-width:1200px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;flex-direction:column}
+.logo{font-size:24px;font-weight:900;color:#a50000}
+.tagline{font-size:12px;color:#555;margin-top:3px}
+.cart{border:none;background:#128c7e;color:#fff;padding:12px 15px;border-radius:25px;font-weight:800;cursor:pointer}
+.hero{color:#fff;background:linear-gradient(135deg,#620000,#b00000,#e85d04,#ff8c00)}
+.hero-inner{max-width:1200px;margin:auto;padding:40px 18px}
+.hero h1{margin:0;font-size:clamp(36px,7vw,60px);font-weight:900}
+.hero p{font-size:17px}
+main{max-width:1200px;margin:auto;padding:18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.search{flex:1;min-width:200px;padding:14px;border:1px solid #e5d2bd;border-radius:10px;font-size:16px}
+.unit-select{padding:14px;border:1px solid #e5d2bd;border-radius:10px;background:#fff}
+.status{color:#765f50;font-size:13px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:15px}
+.card{background:#fff;border:1px solid #eadbca;border-radius:15px;padding:14px;box-shadow:0 3px 10px #641e000f;display:flex;flex-direction:column;justify-content:space-between}
+.discount-badge{display:inline-block;background:#d00000;color:#fff;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:900}
+.product-name{font-size:17px;font-weight:900;margin:12px 0 8px;min-height:40px}
+.product-unit{font-size:12px;color:#76665c}
+.mrp{color:#888;text-decoration:line-through;font-size:13px;margin-top:4px}
+.price{font-size:21px;font-weight:900;margin:6px 0 12px;color:#1e120d}
+.add-button{width:100%;padding:12px;border:none;border-radius:9px;background:#a80000;color:#fff;font-weight:900;cursor:pointer}
+.card-qty-controls{display:flex;align-items:center;justify-content:space-between;background:#fdf3e7;border:1px solid #e2cbb5;border-radius:9px;padding:4px;width:100%}
+.card-qty-btn{width:36px;height:36px;border:none;background:#a80000;color:#fff;border-radius:6px;font-weight:900;font-size:18px;cursor:pointer}
+.card-qty-count{font-weight:900}
+.drawer{display:none;position:fixed;inset:0;z-index:500}
+.drawer.open{display:block}
+.shade{position:absolute;inset:0;background:#0008}
+.panel{position:absolute;top:0;right:0;width:min(480px,100%);height:100%;background:#fff;overflow-y:auto;padding:18px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eadbca;padding-bottom:10px}
+.close-button{border:1px solid #ccc;background:#fff;padding:8px 12px;cursor:pointer;border-radius:6px}
+.cart-item{padding:13px 0;border-bottom:1px solid #eadbca;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.cart-name{font-weight:900;font-size:15px}
+.cart-info{color:#76665c;font-size:12px;margin-top:4px}
+.cart-item-price{font-weight:900;color:#a80000}
+.total-box{display:flex;justify-content:space-between;font-size:23px;font-weight:900;padding:18px 0}
+.field{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;margin-bottom:9px;font-size:15px}
+textarea.field{resize:vertical}
+.submit-button{width:100%;padding:13px;border:none;border-radius:9px;background:#25d366;color:#073b1a;font-weight:900;font-size:15px;cursor:pointer}
+.submit-button:disabled{opacity:.6;cursor:wait}
+.note{color:#777;font-size:12px;line-height:1.5}
+.product-image-box{width:100%;height:190px;background:#fff;border-radius:12px;overflow:hidden;margin:12px 0;display:flex;align-items:center;justify-content:center}
+.product-image{width:100%;height:100%;object-fit:contain}
+.history-overlay{position:fixed;inset:0;background:#0009;z-index:10000;display:none;align-items:center;justify-content:center;padding:15px}
+.history-overlay.show{display:flex}
+.history-box{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:20px}
+.history-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
+.history-close{border:none;background:#222;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-weight:900}
+.history-search{display:flex;gap:8px;margin-bottom:15px}
+.history-search input{flex:1;min-width:0;padding:12px;border:1px solid #ddd;border-radius:9px;font-size:15px}
+.history-search button{border:none;border-radius:9px;padding:0 16px;background:#222;color:#fff;font-weight:800;cursor:pointer}
+.history-card{border:1px solid #eee;border-radius:12px;padding:14px;margin-bottom:12px;background:#fffaf5}
+.history-row{display:flex;justify-content:space-between;gap:12px;margin:7px 0;font-size:13px;overflow-wrap:anywhere}
+.pdf-button{display:inline-block;background:#a80000;color:white;text-decoration:none;padding:10px 14px;border-radius:8px;font-weight:bold;margin-top:10px}
+.no-pdf{font-size:12px;color:#a00;margin-top:10px}
+@media(max-width:450px){.logo{font-size:19px}.nav{padding:10px}.cart{padding:10px}.history-row{font-size:12px}}
+</style>
 </head>
 
 <body>
-
 <header>
   <div class="nav">
     <div class="brand">
       <div class="logo">NIZHAL CRACKERS</div>
       <div class="tagline">Online Booking</div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center;">
+    <div style="display:flex;gap:8px;align-items:center">
       <button class="cart" onclick="openOrderHistory()">My Orders</button>
       <button class="cart" onclick="openCart()">Cart <span id="count">0</span></button>
     </div>
@@ -460,7 +86,7 @@
   <div class="hero-inner">
     <h1>Nizhal Crackers</h1>
     Mobile: 89038 71174
-    <p>Select your crackers and place your order through online.</p>
+    <p>Select your crackers and place your order online.</p>
   </div>
 </section>
 
@@ -475,7 +101,6 @@
   <div id="grid" class="grid"></div>
 </main>
 
-<!-- CART DRAWER -->
 <div id="drawer" class="drawer">
   <div class="shade" onclick="closeCart()"></div>
   <aside class="panel">
@@ -486,10 +111,7 @@
     <div id="cartItems"></div>
     <p id="emptyCart" class="note">Your cart is empty.</p>
     <div id="orderForm" style="display:none">
-      <div class="total-box">
-        <span>Total</span>
-        <span id="cartTotal">Rs.0.00</span>
-      </div>
+      <div class="total-box"><span>Total</span><span id="cartTotal">Rs.0.00</span></div>
       <input id="customerName" class="field" type="text" placeholder="Customer Name *">
       <input id="customerPhone" class="field" type="tel" placeholder="Mobile Number *">
       <textarea id="customerAddress" class="field" rows="4" placeholder="Delivery Address *"></textarea>
@@ -498,7 +120,6 @@
   </aside>
 </div>
 
-<!-- MY ORDERS OVERLAY -->
 <div id="orderHistoryOverlay" class="history-overlay" onclick="closeOrderHistory(event)">
   <div class="history-box" onclick="event.stopPropagation()">
     <div class="history-head">
@@ -509,40 +130,27 @@
       <input id="historyPhone" type="tel" placeholder="Enter mobile number" maxlength="15">
       <button onclick="loadOrderHistory()">View Orders</button>
     </div>
-    <div id="historyStatus" class="history-status">Enter the mobile number used for your order.</div>
+    <div id="historyStatus" class="note">Enter the mobile number used for your order.</div>
     <div id="historyList"></div>
   </div>
 </div>
 
 <script>
+"use strict";
 
 const COMPANY_NAME = "NIZHAL CRACKERS";
-const COMPANY_PHONE = "+91-8903871174";
 const WHATSAPP_NUMBER = "918903871174";
 const DEFAULT_DISCOUNT = 75;
 
-// Correct Product Name Extractor
-function getDisplayProductName(product) {
-  return String(
-    product?.["Cracker Name"] ||
-    product?.name ||
-    product?.["Product Name"] ||
-    product?.product_name ||
-    product?.Name ||
-    ""
-  ).trim();
-}
-
 let products = [];
+let cart = {};
 
-function getProductImage(product) {
-  const sno = Number(product.sno || product.id || product?.["S.No"] || 0);
-  if (!sno || sno < 1 || sno > 197) return "";
-  const number = sno < 100 ? String(sno).padStart(2, "0") : String(sno);
-  return `products/${number}.png`;
+try {
+  cart = JSON.parse(localStorage.getItem("nizhalCrackersCart") || "{}");
+  if (!cart || typeof cart !== "object" || Array.isArray(cart)) cart = {};
+} catch (e) {
+  cart = {};
 }
-
-let cart = JSON.parse(localStorage.getItem("nizhalCrackersCart") || "{}");
 
 function escapeHTML(value) {
   return String(value ?? "")
@@ -553,35 +161,109 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 }
 
+function money(value) {
+  return Number(value || 0).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function getField(obj, names) {
+  for (const name of names) {
+    if (obj[name] !== undefined && obj[name] !== null && String(obj[name]).trim() !== "") {
+      return obj[name];
+    }
+  }
+
+  // Also support column names that differ only by spaces/case/punctuation.
+  const normalise = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+  const wanted = names.map(normalise);
+
+  for (const key of Object.keys(obj)) {
+    if (wanted.includes(normalise(key)) &&
+        obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== "") {
+      return obj[key];
+    }
+  }
+
+  return undefined;
+}
+
+function getDisplayProductName(product) {
+  return String(getField(product, [
+    "Cracker Name", "name", "Product Name", "product_name", "Name"
+  ]) || "").trim();
+}
+
+function getProductImage(product) {
+  const sno = Number(getField(product, ["S.No", "sno", "id"]) || 0);
+  if (!sno || sno < 1 || sno > 197) return "";
+  const number = sno < 100 ? String(sno).padStart(2, "0") : String(sno);
+  return `products/${number}.png`;
+}
+
+function saveCart() {
+  localStorage.setItem("nizhalCrackersCart", JSON.stringify(cart));
+}
+
 async function loadProducts() {
   const status = document.getElementById("status");
+
   try {
     const response = await fetch("/api/products", { cache: "no-store" });
     if (!response.ok) throw new Error("HTTP Error " + response.status);
 
     const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Invalid format");
+    const source = Array.isArray(data) ? data : data.products;
 
-    products = data.map((product, index) => {
-      const pName = getDisplayProductName(product);
-      const mrp = Number(product.MRP ?? product.mrp ?? 0);
-      const discount = Number(product["Discount %"] ?? product.discount ?? DEFAULT_DISCOUNT);
-      const sellingPrice = Number(product["Selling Price"] ?? product.price ?? 0);
+    if (!Array.isArray(source)) throw new Error("Product API did not return a product list");
 
-      const calculatedPrice = sellingPrice > 0 
-        ? sellingPrice 
-        : (mrp > 0 ? mrp - (mrp * (discount / 100)) : 0);
+    products = source.map((product, index) => {
+      const mrp = Number(getField(product, ["MRP", "mrp", "Original Price"]) || 0);
+
+      const discountValue = getField(product, ["Discount %", "Discount", "discount", "discountPercent"]);
+      const discount = discountValue === undefined ? DEFAULT_DISCOUNT : Number(discountValue);
+
+      const sellingValue = getField(product, ["Selling Price", "sellingPrice", "discountPrice", "price"]);
+      const apiSellingPrice = Number(sellingValue || 0);
+
+      /*
+       * PRICE FIX:
+       * If discount is 75%, selling price must be 25% of MRP.
+       * Example: MRP 45 -> Rs.11.25.
+       * If API incorrectly sends MRP as selling price, calculate it again.
+       * Discount 0 products retain their MRP/selling price.
+       */
+      let finalPrice;
+
+      if (discount > 0 && mrp > 0) {
+        const calculated = mrp * (1 - discount / 100);
+
+        if (apiSellingPrice > 0 && apiSellingPrice < mrp) {
+          finalPrice = apiSellingPrice;
+        } else {
+          finalPrice = calculated;
+        }
+      } else {
+        finalPrice = apiSellingPrice > 0 ? apiSellingPrice : mrp;
+      }
 
       return {
         ...product,
-        id: String(product.id ?? product["S.No"] ?? index + 1),
-        sno: Number(product["S.No"] ?? product.sno ?? index + 1),
-        name: pName,
-        unit: String(product.Unit ?? product.unit ?? ""),
-        mrp: mrp,
-        discount: discount,
-        price: Math.round(calculatedPrice)
+        id: String(getField(product, ["id", "S.No", "sno"]) ?? index + 1),
+        sno: Number(getField(product, ["S.No", "sno", "id"]) || index + 1),
+        name: getDisplayProductName(product),
+        unit: String(getField(product, ["Unit", "unit"]) || ""),
+        mrp,
+        discount: Number.isFinite(discount) ? discount : DEFAULT_DISCOUNT,
+        price: Math.max(0, finalPrice)
       };
+    });
+
+    // Remove saved cart entries that no longer match loaded products.
+    const validIds = new Set(products.map(p => String(p.id)));
+    Object.keys(cart).forEach(id => {
+      if (!validIds.has(String(id))) delete cart[id];
     });
 
     saveCart();
@@ -589,21 +271,26 @@ async function loadProducts() {
     renderProducts();
     status.textContent = products.length + " products loaded successfully.";
   } catch (error) {
-    console.error(error);
+    console.error("Product loading error:", error);
     status.textContent = "Error loading products. Please refresh.";
   }
 }
 
 function buildUnits() {
   const select = document.getElementById("unitSelect");
+  const current = select.value;
   const units = [...new Set(products.map(p => p.unit).filter(Boolean))];
+
   select.innerHTML = '<option value="">All Units</option>';
+
   units.forEach(unit => {
     const option = document.createElement("option");
     option.value = unit;
     option.textContent = unit;
     select.appendChild(option);
   });
+
+  if (units.includes(current)) select.value = current;
 }
 
 function renderProducts() {
@@ -612,10 +299,8 @@ function renderProducts() {
   const selectedUnit = document.getElementById("unitSelect").value;
 
   const filtered = products.filter(product => {
-    const pName = product.name.toLowerCase();
-    const matchesSearch = !search || pName.includes(search);
-    const matchesUnit = !selectedUnit || product.unit === selectedUnit;
-    return matchesSearch && matchesUnit;
+    return (!search || product.name.toLowerCase().includes(search)) &&
+      (!selectedUnit || product.unit === selectedUnit);
   });
 
   if (!filtered.length) {
@@ -625,35 +310,32 @@ function renderProducts() {
   }
 
   grid.innerHTML = filtered.map(product => {
-    const discountText = product.discount > 0 ? `${product.discount}% OFF` : "SPECIAL";
-    const pid = String(product.id).replace(/'/g, "\\'");
+    const discountText = product.discount > 0 ? `${product.discount}% OFF` : "NO DISCOUNT";
+    const pid = escapeHTML(product.id);
     const currentQty = Number(cart[product.id]) || 0;
+    const image = getProductImage(product);
 
-    const actionControls = currentQty > 0 ? `
-      <div class="card-qty-controls">
-        <button class="card-qty-btn" onclick="changeQuantity('${pid}', -1)">-</button>
-        <span class="card-qty-count">${currentQty}</span>
-        <button class="card-qty-btn" onclick="changeQuantity('${pid}', 1)">+</button>
-      </div>
-    ` : `
-      <button class="add-button" onclick="addToCart('${pid}')">+ Add to Cart</button>
-    `;
+    const controls = currentQty > 0
+      ? `<div class="card-qty-controls">
+           <button class="card-qty-btn" onclick="changeQuantity('${pid}',-1)">-</button>
+           <span class="card-qty-count">${currentQty}</span>
+           <button class="card-qty-btn" onclick="changeQuantity('${pid}',1)">+</button>
+         </div>`
+      : `<button class="add-button" onclick="addToCart('${pid}')">+ Add to Cart</button>`;
 
-    return `
-      <div class="card">
-        <div>
-          <span class="discount-badge">${escapeHTML(discountText)}</span>
-          <div class="product-image-box">
-            <img src="${getProductImage(product)}" alt="${escapeHTML(product.name)}" class="product-image" loading="lazy" onerror="this.style.display='none'">
-          </div>
-          <div class="product-name">${escapeHTML(product.name)}</div>
-          <div class="product-unit">${escapeHTML(product.unit)}</div>
-          <div class="mrp">MRP Rs.${Number(product.mrp || 0).toLocaleString("en-IN")}</div>
-          <div class="price">Rs.${Number(product.price || 0).toLocaleString("en-IN")}</div>
-        </div>
-        ${actionControls}
+    return `<div class="card">
+      <div>
+        <span class="discount-badge">${escapeHTML(discountText)}</span>
+        ${image ? `<div class="product-image-box">
+          <img src="${image}" alt="${escapeHTML(product.name)}" class="product-image" loading="lazy" onerror="this.parentElement.style.display='none'">
+        </div>` : ""}
+        <div class="product-name">${escapeHTML(product.name)}</div>
+        <div class="product-unit">${escapeHTML(product.unit)}</div>
+        ${product.discount > 0 ? `<div class="mrp">MRP Rs.${money(product.mrp)}</div>` : `<div class="mrp" style="text-decoration:none">MRP Rs.${money(product.mrp)}</div>`}
+        <div class="price">Rs.${money(product.price)}</div>
       </div>
-    `;
+      ${controls}
+    </div>`;
   }).join("");
 
   updateCart();
@@ -677,40 +359,33 @@ function getCartItems() {
     const product = products.find(p => String(p.id) === String(id));
     if (!product) return null;
     return { product, quantity: Number(quantity) || 0 };
-  }).filter(Boolean);
+  }).filter(item => item && item.quantity > 0);
 }
 
 function getCartTotal() {
-  return getCartItems().reduce((total, item) => total + (Number(item.product.price) || 0) * item.quantity, 0);
-}
-
-function saveCart() {
-  localStorage.setItem("nizhalCrackersCart", JSON.stringify(cart));
+  return getCartItems().reduce((total, item) => total + item.product.price * item.quantity, 0);
 }
 
 function updateCart() {
   const items = getCartItems();
   const count = items.reduce((total, item) => total + item.quantity, 0);
+
   document.getElementById("count").textContent = count;
   document.getElementById("emptyCart").style.display = items.length ? "none" : "block";
   document.getElementById("orderForm").style.display = items.length ? "block" : "none";
 
-  const container = document.getElementById("cartItems");
-  container.innerHTML = items.map(item => {
+  document.getElementById("cartItems").innerHTML = items.map(item => {
     const p = item.product;
-    const amount = p.price * item.quantity;
-    return `
-      <div class="cart-item">
-        <div>
-          <div class="cart-name">${escapeHTML(p.name)}</div>
-          <div class="cart-info">${escapeHTML(p.unit)} | Qty: <strong>${item.quantity}</strong> × Rs.${Number(p.price).toFixed(2)}</div>
-        </div>
-        <div class="cart-item-price">Rs.${amount.toFixed(2)}</div>
+    return `<div class="cart-item">
+      <div>
+        <div class="cart-name">${escapeHTML(p.name)}</div>
+        <div class="cart-info">${escapeHTML(p.unit)} | Qty: <strong>${item.quantity}</strong> × Rs.${money(p.price)}</div>
       </div>
-    `;
+      <div class="cart-item-price">Rs.${money(p.price * item.quantity)}</div>
+    </div>`;
   }).join("");
 
-  document.getElementById("cartTotal").textContent = "Rs." + getCartTotal().toFixed(2);
+  document.getElementById("cartTotal").textContent = "Rs." + money(getCartTotal());
 }
 
 function openCart() {
@@ -722,14 +397,13 @@ function closeCart() {
   document.getElementById("drawer").classList.remove("open");
 }
 
-/* SUBMIT ORDER & SEND TO WHATSAPP */
 async function submitOrder() {
   const name = document.getElementById("customerName").value.trim();
   const phone = document.getElementById("customerPhone").value.trim();
   const address = document.getElementById("customerAddress").value.trim();
 
   if (!name || !phone || !address) {
-    alert("Please fill in all mandatory fields (*)");
+    alert("Please fill in all mandatory fields.");
     return;
   }
 
@@ -751,56 +425,88 @@ async function submitOrder() {
       id: item.product.id,
       name: item.product.name,
       unit: item.product.unit,
+      mrp: item.product.mrp,
+      discount: item.product.discount,
       price: item.product.price,
       quantity: item.quantity,
-      total: item.product.price * item.quantity
+      total: Number((item.product.price * item.quantity).toFixed(2))
     })),
-    totalAmount: getCartTotal(),
+    totalAmount: Number(getCartTotal().toFixed(2)),
     orderDate: new Date().toISOString()
   };
 
   try {
-    await fetch("/api/order", {
+    const response = await fetch("/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(orderData)
     });
 
-    let message = `*NEW ORDER - ${COMPANY_NAME}*\n-------------------------\n`;
-    message += `*Name:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}\n\n*ORDER ITEMS:*\n`;
-    items.forEach((item, i) => {
-      message += `${i + 1}. ${item.product.name} (${item.product.unit}) - ${item.quantity} x Rs.${item.product.price} = Rs.${item.product.price * item.quantity}\n`;
-    });
-    message += `\n*TOTAL AMOUNT:* Rs.${getCartTotal().toFixed(2)}`;
+    if (!response.ok) {
+      throw new Error("Order could not be saved. HTTP " + response.status);
+    }
 
-    const encodedUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    const messageParts = [
+      `*NEW ORDER - ${COMPANY_NAME}*`,
+      "-------------------------",
+      `*Name:* ${name}`,
+      `*Phone:* ${phone}`,
+      `*Address:* ${address}`,
+      "",
+      "*ORDER ITEMS:*"
+    ];
+
+    items.forEach((item, i) => {
+      messageParts.push(
+        `${i + 1}. ${item.product.name} (${item.product.unit}) - ${item.quantity} x Rs.${money(item.product.price)} = Rs.${money(item.product.price * item.quantity)}`
+      );
+    });
+
+    messageParts.push("", `*TOTAL AMOUNT:* Rs.${money(getCartTotal())}`);
+
+    const encodedUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(messageParts.join("\n"))}`;
 
     cart = {};
     saveCart();
     renderProducts();
 
-    alert("Order submitted successfully! Redirecting to WhatsApp.");
+    alert("Order submitted successfully! Opening WhatsApp.");
     window.open(encodedUrl, "_blank");
     closeCart();
 
-  } catch (err) {
-    console.error("Order save error:", err);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}`, "_blank");
+  } catch (error) {
+    console.error("Order submission error:", error);
+    alert("Order save failed. Please try again. Do not submit repeatedly until you check My Orders.");
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Confirm Order";
   }
 }
 
-/* MY ORDERS HISTORY FETCH */
 function openOrderHistory() {
   document.getElementById("orderHistoryOverlay").classList.add("show");
 }
 
-function closeOrderHistory(e) {
-  if (!e || e.target.id === "orderHistoryOverlay" || e.target.classList.contains("history-close")) {
+function closeOrderHistory(event) {
+  if (!event || event.target.id === "orderHistoryOverlay" ||
+      (event.target.classList && event.target.classList.contains("history-close"))) {
     document.getElementById("orderHistoryOverlay").classList.remove("show");
   }
+}
+
+function getPdfUrl(order) {
+  return getField(order, [
+    "PDF URL", "pdfUrl", "pdfURL", "billUrl", "billURL",
+    "invoiceUrl", "invoiceURL", "PDF", "pdf"
+  ]) || "";
+}
+
+function safePdfUrl(value) {
+  try {
+    const url = new URL(String(value), window.location.origin);
+    if (url.protocol === "https:" || url.protocol === "http:") return url.href;
+  } catch (e) {}
+  return "";
 }
 
 async function loadOrderHistory() {
@@ -810,6 +516,7 @@ async function loadOrderHistory() {
 
   if (!phone) {
     status.textContent = "Please enter your mobile number.";
+    list.innerHTML = "";
     return;
   }
 
@@ -817,9 +524,14 @@ async function loadOrderHistory() {
   list.innerHTML = "";
 
   try {
-    const res = await fetch(`/api/order-history?phone=${encodeURIComponent(phone)}`);
-    const data = await res.json();
+    const response = await fetch(
+      `/api/order-history?phone=${encodeURIComponent(phone)}`,
+      { cache: "no-store" }
+    );
 
+    if (!response.ok) throw new Error("HTTP Error " + response.status);
+
+    const data = await response.json();
     const ordersList = Array.isArray(data) ? data : (data.orders || []);
 
     if (!ordersList.length) {
@@ -830,30 +542,42 @@ async function loadOrderHistory() {
     status.textContent = `Found ${ordersList.length} order(s):`;
 
     list.innerHTML = ordersList.map(order => {
-      const orderId = order["Order ID"] || order.orderId || order.id || 'N/A';
-      const orderDate = order.Date || order.orderDate || order.date || '';
-      const totalAmt = order.Total || order.totalAmount || order.total || 0;
-      const orderStatus = order.Status || order.status || 'Confirmed';
+      const orderId = getField(order, ["Order ID", "orderId", "id"]) || "N/A";
+      const orderDate = getField(order, ["Date", "orderDate", "date"]) || "";
+      const totalAmt = getField(order, ["Total", "totalAmount", "total"]) || 0;
+      const orderStatus = getField(order, ["Status", "status"]) || "New";
+      const pdfUrl = safePdfUrl(getPdfUrl(order));
 
-      return `
-        <div class="history-card">
-          <div class="history-row"><strong>Order ID:</strong> <span>${escapeHTML(orderId)}</span></div>
-          <div class="history-row"><strong>Date:</strong> <span>${orderDate ? new Date(orderDate).toLocaleString() : 'N/A'}</span></div>
-          <div class="history-row"><strong>Total Amount:</strong> <span>Rs. ${Number(totalAmt).toFixed(2)}</span></div>
-          <div class="history-row"><strong>Status:</strong> <span style="color:green;font-weight:bold;">${escapeHTML(orderStatus)}</span></div>
-        </div>
-      `;
+      let formattedDate = "N/A";
+      if (orderDate) {
+        const parsedDate = new Date(orderDate);
+        if (!Number.isNaN(parsedDate.getTime())) {
+          formattedDate = parsedDate.toLocaleString();
+        }
+      }
+
+      return `<div class="history-card">
+        <div class="history-row"><strong>Order ID:</strong><span>${escapeHTML(orderId)}</span></div>
+        <div class="history-row"><strong>Date:</strong><span>${escapeHTML(formattedDate)}</span></div>
+        <div class="history-row"><strong>Total Amount:</strong><span>Rs. ${money(totalAmt)}</span></div>
+        <div class="history-row"><strong>Status:</strong><span style="color:green;font-weight:bold">${escapeHTML(orderStatus)}</span></div>
+        ${pdfUrl
+          ? `<a class="pdf-button" href="${escapeHTML(pdfUrl)}" target="_blank" rel="noopener noreferrer">View / Download Bill PDF</a>`
+          : `<div class="no-pdf">PDF link is not being returned by the order-history API.</div>`}
+      </div>`;
     }).join("");
 
-  } catch (err) {
-    console.error(err);
-    status.textContent = "Error loading order history. Please check again.";
+  } catch (error) {
+    console.error("Order history error:", error);
+    status.textContent = "Error loading order history. Please try again.";
   }
 }
 
+document.getElementById("historyPhone").addEventListener("keydown", event => {
+  if (event.key === "Enter") loadOrderHistory();
+});
+
 window.addEventListener("DOMContentLoaded", loadProducts);
-
 </script>
-
 </body>
 </html>
