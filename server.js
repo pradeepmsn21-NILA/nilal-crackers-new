@@ -1,4 +1,4 @@
-```javascript
+
 /*
 =========================================================
  NIZHAL CRACKERS - SERVER.JS
@@ -753,4 +753,4 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log("Frontend:", publicPath);
   console.log("======================================");
 });
-```
+
