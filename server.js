@@ -69,31 +69,33 @@ function getProductsArray(data) {
 =========================================================
  OWNER SECURITY MIDDLEWARE
 =========================================================
-*/
-
 function requireOwnerKey(req, res, next) {
+  const configuredKey = String(OWNER_APP_KEY || "").trim();
+
   const suppliedKey = String(
-    req.headers["x-owner-key"] ||
-    req.query.key ||
+    req.get("x-owner-key") ||
+    req.query?.key ||
     req.body?.key ||
     ""
   ).trim();
 
-  if (!OWNER_APP_KEY) {
+  if (!configuredKey) {
+    console.error("OWNER_APP_KEY is missing in server environment.");
+
     return res.status(500).json({
       ok: false,
-      error: "OWNER_APP_KEY is not configured on the server."
+      error: "Owner authentication is not configured."
     });
   }
 
-  if (suppliedKey !== OWNER_APP_KEY) {
+  if (!suppliedKey || suppliedKey !== configuredKey) {
     return res.status(401).json({
       ok: false,
       error: "Unauthorized owner access."
     });
   }
 
-  next();
+  return next();
 }
 
 /*
