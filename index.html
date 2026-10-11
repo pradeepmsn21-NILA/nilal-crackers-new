@@ -195,6 +195,13 @@ function getDisplayProductName(product) {
   ]) || "").trim();
 }
 
+function getProductImage(product) {
+  const sno = Number(getField(product, ["S.No", "sno", "id"]) || 0);
+  if (!sno || sno < 1 || sno > 197) return "";
+  const number = sno < 100 ? String(sno).padStart(2, "0") : String(sno);
+  return `products/${number}.png`;
+}
+
 function saveCart() {
   localStorage.setItem("nizhalCrackersCart", JSON.stringify(cart));
 }
@@ -306,7 +313,7 @@ function renderProducts() {
     const discountText = product.discount > 0 ? `${product.discount}% OFF` : "NO DISCOUNT";
     const pid = escapeHTML(product.id);
     const currentQty = Number(cart[product.id]) || 0;
-    
+    const image = getProductImage(product);
 
     const controls = currentQty > 0
       ? `<div class="card-qty-controls">
