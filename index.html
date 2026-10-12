@@ -176,7 +176,6 @@ function getField(obj, names) {
     }
   }
 
-  // Also support column names that differ only by spaces/case/punctuation.
   const normalise = s => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
   const wanted = names.map(normalise);
 
@@ -228,13 +227,6 @@ async function loadProducts() {
       const sellingValue = getField(product, ["Selling Price", "sellingPrice", "discountPrice", "price"]);
       const apiSellingPrice = Number(sellingValue || 0);
 
-      /*
-       * PRICE FIX:
-       * If discount is 75%, selling price must be 25% of MRP.
-       * Example: MRP 45 -> Rs.11.25.
-       * If API incorrectly sends MRP as selling price, calculate it again.
-       * Discount 0 products retain their MRP/selling price.
-       */
       let finalPrice;
 
       if (discount > 0 && mrp > 0) {
@@ -261,7 +253,6 @@ async function loadProducts() {
       };
     });
 
-    // Remove saved cart entries that no longer match loaded products.
     const validIds = new Set(products.map(p => String(p.id)));
     Object.keys(cart).forEach(id => {
       if (!validIds.has(String(id))) delete cart[id];
@@ -332,7 +323,7 @@ function renderProducts() {
         </div>` : ""}
         <div class="product-name">${escapeHTML(product.name)}</div>
         <div class="product-unit">${escapeHTML(product.unit)}</div>
-        ${product.discount > 0 ? `<div class="mrp">MRP Rs.${money(product.mrp)}</div>` : `<div class="mrp" style="text-decoration:none">MRP Rs.${money(product.mrp)}</div>`}
+        ${product.discount > 0 ? `<div class="mrp">MRP Rs.\${money(product.mrp)}</div>` : `<div class="mrp" style="text-decoration:none">MRP Rs.\${money(product.mrp)}</div>`}
         <div class="price">Rs.${money(product.price)}</div>
       </div>
       ${controls}
@@ -479,8 +470,6 @@ async function submitOrder() {
   let pdfUrl = "";
   let pdfUploadFailed = false;
   try {
-    // Generate and upload the bill before saving the order. If upload fails,
-    // the order is still saved so the customer does not lose their order.
     try {
       submitBtn.textContent = "Creating bill...";
       const pdfDataUri = await createOrderPdf(orderData, orderId);
@@ -572,7 +561,7 @@ function getPdfUrl(order) {
 function safePdfUrl(value) {
   try {
     const url = new URL(String(value), window.location.origin);
-    if ((url.protocol === "https:" || url.protocol === "http:") && /(^|\.)drive\.google\.com$/i.test(url.hostname)) return url.href;
+    if ((url.protocol === "https:" || url.protocol === "http:") && /(^|\.)drive\.google\.com\$/i.test(url.hostname)) return url.href;
   } catch (e) {}
   return "";
 }
@@ -630,7 +619,7 @@ async function loadOrderHistory() {
         <div class="history-row"><strong>Total Amount:</strong><span>Rs. ${money(totalAmt)}</span></div>
         <div class="history-row"><strong>Status:</strong><span style="color:green;font-weight:bold">${escapeHTML(orderStatus)}</span></div>
         ${pdfUrl
-          ? `<a class="pdf-button" href="${escapeHTML(pdfUrl)}" target="_blank" rel="noopener noreferrer">View / Download Bill PDF</a>`
+          ? `<a class="pdf-button" href="\${escapeHTML(pdfUrl)}" target="_blank" rel="noopener noreferrer">View / Download Bill PDF</a>`
           : `<div class="no-pdf">PDF link is not being returned by the order-history API.</div>`}
       </div>`;
     }).join("");
