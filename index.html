@@ -26,6 +26,8 @@ main{max-width:1200px;margin:auto;padding:18px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:15px}
 .card{background:#fff;border:1px solid #eadbca;border-radius:15px;padding:14px;box-shadow:0 3px 10px #641e000f;display:flex;flex-direction:column;justify-content:space-between}
 .discount-badge{display:inline-block;background:#d00000;color:#fff;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:900}
+.product-image-box{width:100%;height:160px;background:#fff;border-radius:12px;overflow:hidden;margin:12px 0;display:flex;align-items:center;justify-content:center;border:1px solid #f2e3d5}
+.product-image{width:100%;height:100%;object-fit:contain}
 .product-name{font-size:17px;font-weight:900;margin:12px 0 8px;min-height:40px}
 .product-unit{font-size:12px;color:#76665c}
 .mrp{color:#888;text-decoration:line-through;font-size:13px;margin-top:4px}
@@ -50,9 +52,6 @@ textarea.field{resize:vertical}
 .submit-button{width:100%;padding:13px;border:none;border-radius:9px;background:#25d366;color:#073b1a;font-weight:900;font-size:15px;cursor:pointer}
 .submit-button:disabled{opacity:.6;cursor:wait}
 .note{color:#777;font-size:12px;line-height:1.5}
-.product-icon-box{width:100%;height:140px;background:linear-gradient(135deg,#fff0e6,#ffd8cc);border-radius:12px;margin:12px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px dashed #f2a474}
-.product-icon{font-size:48px;line-height:1}
-.product-icon-text{font-size:12px;font-weight:bold;color:#b00000;margin-top:6px;text-transform:uppercase}
 .history-overlay{position:fixed;inset:0;background:#0009;z-index:10000;display:none;align-items:center;justify-content:center;padding:15px}
 .history-overlay.show{display:flex}
 .history-box{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:20px}
@@ -196,17 +195,11 @@ function getDisplayProductName(product) {
   ]) || "").trim();
 }
 
-function getCrackerIcon(name) {
-  const n = name.toLowerCase();
-  if (n.includes("bomb") || n.includes("kuruvi") || n.includes("adiyal")) return { icon: "💣", label: "Bomb" };
-  if (n.includes("flower") || n.includes("pot") || n.includes("kotti")) return { icon: "🪴", label: "Flower Pot" };
-  if (n.includes("chakkar") || n.includes("wheel") || n.includes("spinner")) return { icon: "🌀", label: "Chakkar" };
-  if (n.includes("rocket")) return { icon: "🚀", label: "Rocket" };
-  if (n.includes("sparkler")) return { icon: "✨", label: "Sparkler" };
-  if (n.includes("shot") || n.includes("pipe") || n.includes("decker") || n.includes("shooter")) return { icon: "🎆", label: "Fancy Shot" };
-  if (n.includes("fountain") || n.includes("shower") || n.includes("falls")) return { icon: "⛲", label: "Fountain" };
-  if (n.includes("cap") || n.includes("gun")) return { icon: "🔫", label: "Gun / Cap" };
-  return { icon: "💥", label: "Cracker" };
+function getProductImage(product) {
+  const sno = Number(getField(product, ["S.No", "sno", "id"]) || 0);
+  if (!sno || sno < 1 || sno > 197) return "";
+  const number = sno < 100 ? String(sno).padStart(2, "0") : String(sno);
+  return `products/${number}.png`;
 }
 
 function saveCart() {
@@ -312,7 +305,7 @@ function renderProducts() {
     const discountText = product.discount > 0 ? `${product.discount}% OFF` : "NO DISCOUNT";
     const pid = escapeHTML(product.id);
     const currentQty = Number(cart[product.id]) || 0;
-    const badge = getCrackerIcon(product.name);
+    const image = getProductImage(product);
 
     const controls = currentQty > 0
       ? `<div class="card-qty-controls">
@@ -325,13 +318,12 @@ function renderProducts() {
     return `<div class="card">
       <div>
         <span class="discount-badge">${escapeHTML(discountText)}</span>
-        <div class="product-icon-box">
-          <div class="product-icon">${badge.icon}</div>
-          <div class="product-icon-text">${badge.label}</div>
-        </div>
+        ${image ? `<div class="product-image-box">
+          <img src="${image}" alt="${escapeHTML(product.name)}" class="product-image" loading="lazy" onerror="this.parentElement.style.display='none'">
+        </div>` : ""}
         <div class="product-name">${escapeHTML(product.name)}</div>
         <div class="product-unit">${escapeHTML(product.unit)}</div>
-        ${product.discount > 0 ? `<div class="mrp">MRP Rs.\${money(product.mrp)}</div>` : `<div class="mrp" style="text-decoration:none">MRP Rs.\${money(product.mrp)}</div>`}
+        ${product.mrp > 0 ? `<div class="mrp">MRP Rs.\${money(product.mrp)}</div>` : ''}
         <div class="price">Rs.${money(product.price)}</div>
       </div>
       ${controls}
