@@ -264,7 +264,7 @@ async function loadProducts() {
     status.textContent = products.length + " products loaded successfully.";
   } catch (error) {
     console.error("Product loading error:", error);
-    status.textContent = "Error loading products. Please refresh.";
+    status.textContent = "Error loading products. " + (error.message || "Please refresh.");
   }
 }
 
@@ -323,7 +323,7 @@ function renderProducts() {
         </div>` : ""}
         <div class="product-name">${escapeHTML(product.name)}</div>
         <div class="product-unit">${escapeHTML(product.unit)}</div>
-        ${product.mrp > 0 ? `<div class="mrp">MRP Rs.\${money(product.mrp)}</div>` : ''}
+        ${product.mrp > 0 ? `<div class="mrp">MRP Rs.${money(product.mrp)}</div>` : ''}
         <div class="price">Rs.${money(product.price)}</div>
       </div>
       ${controls}
@@ -619,7 +619,7 @@ async function loadOrderHistory() {
         <div class="history-row"><strong>Total Amount:</strong><span>Rs. ${money(totalAmt)}</span></div>
         <div class="history-row"><strong>Status:</strong><span style="color:green;font-weight:bold">${escapeHTML(orderStatus)}</span></div>
         ${pdfUrl
-          ? `<a class="pdf-button" href="\${escapeHTML(pdfUrl)}" target="_blank" rel="noopener noreferrer">View / Download Bill PDF</a>`
+          ? `<a class="pdf-button" href="${escapeHTML(pdfUrl)}" target="_blank" rel="noopener noreferrer">View / Download Bill PDF</a>`
           : `<div class="no-pdf">PDF link is not being returned by the order-history API.</div>`}
       </div>`;
     }).join("");
