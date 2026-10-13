@@ -1,4 +1,3 @@
-
 /*
 =========================================================
  NIZHAL CRACKERS - SERVER.JS
@@ -40,7 +39,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyDE3fNzjuhp9Ka
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY || "";
 
-// Render Environment Variables-ல் OWNER_APP_KEY அமைக்கவும்.
 const OWNER_APP_KEY = (process.env.OWNER_APP_KEY || "").trim();
 
 /*
@@ -63,7 +61,6 @@ function getProductsArray(data) {
   if (Array.isArray(data?.data)) return data.data;
   return null;
 }
-
 
 /*
 =========================================================
@@ -102,14 +99,13 @@ function requireOwnerKey(req, res, next) {
   return next();
 }
 
-
 /*
 =========================================================
  HEALTH CHECK
 =========================================================
 */
 
-get("/api/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
     service: "Nizhal Crackers",
@@ -121,11 +117,10 @@ get("/api/health", (req, res) => {
 /*
 =========================================================
  PRODUCTS API
- FIX: price now uses discounted sellingPrice
 =========================================================
 */
 
-get("/api/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: "GET",
@@ -186,12 +181,9 @@ get("/api/products", async (req, res) => {
           mrp: mrp,
           discount: discount,
           sellingPrice: sellingPrice,
-
-          // முக்கியம்: frontend-க்கு discounted price அனுப்பப்படுகிறது.
           price: sellingPrice
         };
       })
-      // Google Sheet-ல் உள்ள காலியான வரிகளை நீக்குகிறது.
       .filter((p) => {
         const name = String(p.name ?? p["Cracker Name"] ?? "").trim();
         return name !== "" && (Number(p.mrp) > 0 || Number(p.sellingPrice) > 0);
@@ -217,7 +209,7 @@ get("/api/products", async (req, res) => {
 =========================================================
 */
 
-post("/api/verify-recaptcha", async (req, res) => {
+app.post("/api/verify-recaptcha", async (req, res) => {
   try {
     const token = String(req.body?.token || "").trim();
 
@@ -279,7 +271,7 @@ post("/api/verify-recaptcha", async (req, res) => {
 
 /*
 =========================================================
- PDF UPLOAD API (Updated)
+ PDF UPLOAD API
 =========================================================
 */
 
@@ -331,7 +323,6 @@ app.post("/api/upload-pdf", async (req, res) => {
     const responseText = await response.text();
     const data = parseJson(responseText);
 
-    // Apps Script JSON-ah return pannalaam, aana ok: false-ah irukalam
     if (!response.ok) {
       return res.status(502).json({
         ok: false,
@@ -375,9 +366,10 @@ app.post("/api/upload-pdf", async (req, res) => {
     });
   }
 });
+
+/*
 =========================================================
  CUSTOMER ORDER HISTORY API
- Preserves PDF URL fields returned by Apps Script.
 =========================================================
 */
 
@@ -424,7 +416,6 @@ app.get("/api/order-history", async (req, res) => {
       });
     }
 
-    // Keep all returned order fields, including PDF URL.
     const orders = Array.isArray(data)
       ? data
       : (Array.isArray(data.orders) ? data.orders : []);
