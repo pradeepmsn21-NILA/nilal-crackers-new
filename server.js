@@ -127,7 +127,7 @@ app.get("/api/health", (req, res) => {
 
 app.get("/api/products", async (req, res) => {
   try {
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: "GET",
       headers: { Accept: "application/json" },
       cache: "no-store"
@@ -315,7 +315,7 @@ app.post("/api/upload-pdf", async (req, res) => {
 
     console.log("Uploading PDF:", fileName);
 
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -393,7 +393,7 @@ app.get("/api/order-history", async (req, res) => {
     }
 
     const url =
-      GOOGLE_APPS_SCRIPT_URL +
+      APPS_SCRIPT_URL +
       "?action=getOrderHistory&phone=" +
       encodeURIComponent(phone);
 
@@ -465,7 +465,7 @@ app.post("/api/order", async (req, res) => {
       });
     }
 
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -530,7 +530,7 @@ app.get("/api/owner/orders", requireOwnerKey, async (req, res) => {
   try {
     const status = String(req.query.status || "").trim();
 
-    let url = GOOGLE_APPS_SCRIPT_URL + "?action=getOwnerOrders";
+    let url = APPS_SCRIPT_URL + "?action=getOwnerOrders&key=" + encodeURIComponent(OWNER_APP_KEY);
 
     if (status) {
       url += "&status=" + encodeURIComponent(status);
@@ -575,7 +575,7 @@ app.get("/api/owner/orders", requireOwnerKey, async (req, res) => {
 
 app.get("/api/owner/new-count", requireOwnerKey, async (req, res) => {
   try {
-    const url = GOOGLE_APPS_SCRIPT_URL + "?action=getNewOrderCount";
+    const url = APPS_SCRIPT_URL + "?action=getNewOrderCount&key=" + encodeURIComponent(OWNER_APP_KEY);
 
     const response = await fetch(url, {
       method: "GET",
@@ -648,7 +648,7 @@ app.post("/api/owner/order-status", requireOwnerKey, async (req, res) => {
       });
     }
 
-    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
