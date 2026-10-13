@@ -109,7 +109,7 @@ function requireOwnerKey(req, res, next) {
 =========================================================
 */
 
-app.get("/api/health", (req, res) => {
+get("/api/health", (req, res) => {
   res.json({
     ok: true,
     service: "Nizhal Crackers",
@@ -125,7 +125,7 @@ app.get("/api/health", (req, res) => {
 =========================================================
 */
 
-app.get("/api/products", async (req, res) => {
+get("/api/products", async (req, res) => {
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: "GET",
@@ -217,7 +217,7 @@ app.get("/api/products", async (req, res) => {
 =========================================================
 */
 
-app.post("/api/verify-recaptcha", async (req, res) => {
+post("/api/verify-recaptcha", async (req, res) => {
   try {
     const token = String(req.body?.token || "").trim();
 
@@ -279,7 +279,7 @@ app.post("/api/verify-recaptcha", async (req, res) => {
 
 /*
 =========================================================
- PDF UPLOAD API
+ PDF UPLOAD API (Updated)
 =========================================================
 */
 
@@ -331,10 +331,13 @@ app.post("/api/upload-pdf", async (req, res) => {
     const responseText = await response.text();
     const data = parseJson(responseText);
 
+    // Apps Script JSON-ah return pannalaam, aana ok: false-ah irukalam
     if (!response.ok) {
-      throw new Error(
-        "Google Apps Script PDF upload failed. HTTP " + response.status
-      );
+      return res.status(502).json({
+        ok: false,
+        error: "Google Apps Script HTTP error: " + response.status,
+        details: responseText
+      });
     }
 
     if (!data || data.ok === false) {
@@ -367,13 +370,11 @@ app.post("/api/upload-pdf", async (req, res) => {
 
     return res.status(500).json({
       ok: false,
-      error: "PDF upload failed.",
+      error: "PDF upload failed due to server error.",
       details: error.message
     });
   }
 });
-
-/*
 =========================================================
  CUSTOMER ORDER HISTORY API
  Preserves PDF URL fields returned by Apps Script.
