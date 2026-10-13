@@ -1,7 +1,7 @@
 /*
 =========================================================
  NIZHAL CRACKERS - SERVER.JS
- Express Backend
+ Express Backend (Complete & Updated)
 =========================================================
 */
 
@@ -271,13 +271,19 @@ app.post("/api/verify-recaptcha", async (req, res) => {
 
 /*
 =========================================================
- PDF UPLOAD API
+ PDF UPLOAD API (Updated to handle different request formats)
 =========================================================
 */
 
 app.post("/api/upload-pdf", async (req, res) => {
   try {
-    const pdfBase64 = String(req.body?.pdfBase64 || "").trim();
+    const pdfBase64 = String(
+      req.body?.pdfBase64 ||
+      req.body?.base64 ||
+      req.body?.data ||
+      req.body?.pdf ||
+      ""
+    ).trim();
 
     const fileName = String(
       req.body?.fileName || "Nizhal_Crackers_Order.pdf"
@@ -295,13 +301,10 @@ app.post("/api/upload-pdf", async (req, res) => {
       ""
     );
 
-    if (
-      cleanBase64.length < 100 ||
-      !/^[A-Za-z0-9+/=\s]+$/.test(cleanBase64)
-    ) {
+    if (cleanBase64.length < 50) {
       return res.status(400).json({
         ok: false,
-        error: "Invalid PDF data."
+        error: "Invalid PDF data (too short)."
       });
     }
 
